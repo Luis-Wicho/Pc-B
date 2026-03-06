@@ -1,16 +1,16 @@
-// Importamos el repositorio
+// Importamos repositorio
 import { EstablecimientoRepository } from "../domain/establecimiento.repository";
 
-// Importamos la entidad
+// Importamos entidad
 import { Establecimiento } from "../domain/establecimiento.entity";
 
-// Caso de uso para crear un establecimiento
-export class CrearEstablecimiento {
+// Caso de uso para actualizar un establecimiento
+export class ActualizarEstablecimiento {
 
   constructor(private repo: EstablecimientoRepository) {}
 
-  // Ejecuta la creación del establecimiento
+  // Ejecuta la actualización
   ejecutar(establecimiento: Establecimiento) {
-    return this.repo.create(establecimiento);
+    return this.repo.update(establecimiento);
   }
 }
