@@ -5,6 +5,7 @@ import { Establecimiento } from "./establecimiento.entity";
 // Esta interfaz funciona como un contrato que indica qué operaciones
 // se pueden realizar con los establecimientos.
 export interface EstablecimientoRepository {
+  delete(id: number): unknown;
 
   // Método para obtener todos los establecimientos registrados.
   // Devuelve una promesa que contiene un arreglo de establecimientos.
