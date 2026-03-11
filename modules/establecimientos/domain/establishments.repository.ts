@@ -1,10 +1,10 @@
 import { Establecimiento } from "./establecimiento.entity";
 
-export interface EstablecimientoRepository {
+export interface EstablishmentsRepository {
 
   getAll(): Promise<Establecimiento[]>;
 
-  create(establecimiento: Establecimiento): Promise<Establecimiento>;
+  create(establishment: Establecimiento): Promise<Establecimiento>;
 
   update(establecimiento: Establecimiento): Promise<Establecimiento>;
 

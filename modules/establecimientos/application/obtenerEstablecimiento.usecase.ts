@@ -1,10 +1,10 @@
 // Importamos el repositorio
-import { EstablecimientoRepository } from "../domain/establecimiento.repository";
+import { EstablishmentsRepository } from "../domain/establishments.repository";
 
 // Caso de uso para obtener todos los establecimientos
 export class ObtenerEstablecimientos {
 
-  constructor(private repo: EstablecimientoRepository) {}
+  constructor(private repo: EstablishmentsRepository) {}
 
   // Devuelve todos los establecimientos
   ejecutar() {

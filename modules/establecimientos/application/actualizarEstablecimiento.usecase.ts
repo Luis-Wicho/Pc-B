@@ -1,5 +1,5 @@
 // Importamos repositorio
-import { EstablecimientoRepository } from "../domain/establecimiento.repository";
+import { EstablishmentsRepository } from "../domain/establishments.repository";
 
 // Importamos entidad
 import { Establecimiento } from "../domain/establecimiento.entity";
@@ -7,7 +7,7 @@ import { Establecimiento } from "../domain/establecimiento.entity";
 // Caso de uso para actualizar un establecimiento
 export class ActualizarEstablecimiento {
 
-  constructor(private repo: EstablecimientoRepository) {}
+  constructor(private repo: EstablishmentsRepository) {}
 
   // Ejecuta la actualización
   ejecutar(establecimiento: Establecimiento) {

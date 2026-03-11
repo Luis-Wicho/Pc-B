@@ -1,9 +1,9 @@
-import { EstablecimientoRepository } from "../domain/establecimiento.repository"
+import { EstablishmentsRepository } from "../domain/establishments.repository"
 import { Establecimiento } from "../domain/establecimiento.entity"
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 
-export class EstablecimientoRepositoryImpl implements EstablecimientoRepository {
+export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
 
   async getAll(): Promise<Establecimiento[]> {
 

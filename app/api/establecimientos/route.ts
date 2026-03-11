@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server"
-import { EstablecimientoRepositoryImpl } from "@/modules/establecimientos/infraestructure/establecimientoRepositoryImpl"
+import { EstablishmentsRepositoryImpl } from "@/modules/establecimientos/infraestructure/establishmentsRepositoryImpl"
 
 export async function GET() {
 
   try {
 
-    const repository = new EstablecimientoRepositoryImpl()
+    const repository = new EstablishmentsRepositoryImpl()
 
     const establecimientos = await repository.getAll()
 

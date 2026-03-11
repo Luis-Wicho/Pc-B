@@ -1,13 +1,13 @@
 // Importamos el repositorio
-import { EstablecimientoRepository } from "../domain/establecimiento.repository";
+import { EstablishmentsRepository } from "../domain/establishments.repository";
 
 // Importamos la entidad
 import { Establecimiento } from "../domain/establecimiento.entity";
 
 // Caso de uso para crear un establecimiento
-export class CrearEstablecimiento {
+export class CreateEstablishmentUseCase {
 
-  constructor(private repo: EstablecimientoRepository) {}
+  constructor(private repo: EstablishmentsRepository) {}
 
   // Ejecuta la creación del establecimiento
   ejecutar(establecimiento: Establecimiento) {

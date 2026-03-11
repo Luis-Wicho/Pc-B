@@ -1,10 +1,10 @@
 // Importamos repositorio
-import { EstablecimientoRepository } from "../domain/establecimiento.repository";
+import { EstablishmentsRepository } from "../domain/establishments.repository";
 
 // Caso de uso para eliminar un establecimiento
 export class EliminarEstablecimiento {
 
-  constructor(private repo: EstablecimientoRepository) {}
+  constructor(private repo: EstablishmentsRepository) {}
 
   // Ejecuta la eliminación
   ejecutar(id: number) {
