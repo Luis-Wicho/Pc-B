@@ -1,5 +1,6 @@
 "use client"
 
+import { error } from "node:console"
 import { useEffect, useState } from "react"
 
 export default function ListaEstablecimientosView() {
@@ -13,8 +14,13 @@ export default function ListaEstablecimientosView() {
       const res = await fetch("/api/establecimientos")
       const data = await res.json()
       console.log(data)
-      if(setEstablecimientos)
-      //setEstablecimientos(data)
+      if(!data.error){
+        setEstablecimientos(data)
+      }
+      else{
+        alert(data.error)
+      }
+
     }
 
     obtenerEstablecimientos()

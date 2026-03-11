@@ -16,7 +16,7 @@ export async function GET() {
     console.error(error)
 
     return NextResponse.json(
-      { error: "Error al obtener establecimientos" },
+      { error: "Error al obtener establecimientos :(" },
       { status: 500 }
     )
 
