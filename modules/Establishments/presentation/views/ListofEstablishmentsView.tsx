@@ -14,7 +14,7 @@ export default function ListaEstablecimientosView() {
       const data = await res.json()
       console.log(data)
       if(data)
-      //setEstablecimientos(data)
+      setEstablecimientos(data)
     }
 
     obtenerEstablecimientos()
