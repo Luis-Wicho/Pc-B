@@ -1,11 +1,11 @@
-import { EstablishmentsRepository } from "../domain/establishments.repository"
-import { Establecimiento } from "../domain/establecimiento.entity"
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
+import { EstablishmentsRepository } from "../domain/establishments.repository"
+import { Establishment } from "../domain/establishment.entity"
 
 export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
 
-  async getAll(): Promise<Establecimiento[]> {
+  async getAll(): Promise<Establishment[]> {
 
     const supabase = await createClient(cookies())
 
@@ -15,10 +15,10 @@ export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
 
     if (error) throw error
 
-    return data as Establecimiento[]
+    return data as Establishment[]
   }
 
-  async findById(id: number): Promise<Establecimiento | null> {
+  async findById(id: number): Promise<Establishment | null> {
 
     const supabase = await createClient(cookies())
 
@@ -30,10 +30,10 @@ export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
 
     if (error) return null
 
-    return data as Establecimiento
+    return data as Establishment
   }
 
-  async create(establecimiento: Establecimiento): Promise<Establecimiento> {
+  async create(establecimiento: Establishment): Promise<Establishment> {
 
     const supabase = await createClient(cookies())
 
@@ -45,10 +45,10 @@ export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
 
     if (error) throw error
 
-    return data as Establecimiento
+    return data as Establishment
   }
 
-  async update(establecimiento: Establecimiento): Promise<Establecimiento> {
+  async update(establecimiento: Establishment): Promise<Establishment> {
 
     const supabase = await createClient(cookies())
 
@@ -61,7 +61,7 @@ export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
 
     if (error) throw error
 
-    return data as Establecimiento
+    return data as Establishment
   }
 
   async delete(id: number): Promise<void> {

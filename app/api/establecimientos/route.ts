@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { EstablishmentsRepositoryImpl } from "@/modules/establecimientos/infraestructure/establishmentsRepositoryImpl"
+import { EstablishmentsRepositoryImpl } from "@/modules/Establishments/infraestructure/establishmentsRepositoryImpl"
 
 export async function GET() {
 
