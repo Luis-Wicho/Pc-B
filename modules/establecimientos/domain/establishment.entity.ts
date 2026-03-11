@@ -1,4 +1,4 @@
-export interface Establecimiento {
+export interface Establishment {
   id_establecimiento: number;
   no_expediente: string;
   nombre_establecimiento: string;

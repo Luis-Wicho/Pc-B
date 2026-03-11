@@ -1,14 +1,14 @@
-import { Establecimiento } from "./establecimiento.entity";
+import { Establishment } from "./establishment.entity";
 
 export interface EstablishmentsRepository {
 
-  getAll(): Promise<Establecimiento[]>;
+  getAll(): Promise<Establishment[]>;
 
-  create(establishment: Establecimiento): Promise<Establecimiento>;
+  create(establishment: Establishment): Promise<Establishment>;
 
-  update(establecimiento: Establecimiento): Promise<Establecimiento>;
+  update(establecimiento: Establishment): Promise<Establishment>;
 
-  findById(id: number): Promise<Establecimiento | null>;
+  findById(id: number): Promise<Establishment | null>;
 
   delete(id: number): Promise<void>;
 

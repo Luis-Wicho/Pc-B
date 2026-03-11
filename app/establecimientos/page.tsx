@@ -1,4 +1,4 @@
-import ListaEstablecimientosView from "@/modules/establecimientos/presentation/views/ListaEstablecimientosView"
+import ListaEstablecimientosView from "@/modules/Establecimientos/presentation/views/ListaEstablecimientosView"
 
 export default function Page() {
   return <ListaEstablecimientosView/>
