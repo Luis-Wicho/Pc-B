@@ -13,7 +13,7 @@ export default function ListaEstablecimientosView() {
       const res = await fetch("/api/establecimientos")
       const data = await res.json()
       console.log(data)
-      if(setEstablecimientos)
+      if(data)
       //setEstablecimientos(data)
     }
 
