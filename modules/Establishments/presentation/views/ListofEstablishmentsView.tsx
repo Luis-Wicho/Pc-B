@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 
-export default function ListaEstablecimientosView() {
+export default function ListoEstablishmentsView() {
 
   const [establecimientos, setEstablecimientos] = useState<any[]>([])
 
@@ -10,10 +10,10 @@ export default function ListaEstablecimientosView() {
 
     const obtenerEstablecimientos = async () => {
 
-      const res = await fetch("/api/establecimientos")
+      const res = await fetch("/api/establishments")
       const data = await res.json()
       console.log(data)
-
+ 
       if(!data.error){
         setEstablecimientos(data)
       }
