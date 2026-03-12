@@ -40,7 +40,7 @@ export default function ListoEstablishmentsView() {
         boxShadow:"0 2px 8px rgba(0,0,0,0.1)"
       }}>
 
-        <thead style={{backgroundColor:"#e86914", color:"white"}}>
+        <thead style={{backgroundColor:"#00bbff", color:"white"}}>
           <tr>
             <th style={styles.th}>Expediente</th>
             <th style={styles.th}>Nombre</th>
