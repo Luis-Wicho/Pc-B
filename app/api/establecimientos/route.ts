@@ -1,5 +1,6 @@
+import { EstablishmentsRepositoryImpl } from "@/modules/Establishments/infrastructure/establishmentsRepositoryImpl"
 import { NextResponse } from "next/server"
-import { EstablishmentsRepositoryImpl } from "@/modules/Establishments/infraestructure/establishmentsRepositoryImpl"
+
 
 export async function GET() {
 
