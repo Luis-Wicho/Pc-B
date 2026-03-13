@@ -4,18 +4,18 @@ import { useEffect, useState } from "react"
 
 export default function ListoEstablishmentsView() {
 
-  const [establecimientos, setEstablecimientos] = useState<any[]>([])
+  const [establecimientos, setEstablishments] = useState<any[]>([])
 
   useEffect(() => {
 
-    const obtenerEstablecimientos = async () => {
+    const obtainEstablishments = async () => {
 
       const res = await fetch("/api/establishments")
       const data = await res.json()
       console.log(data)
  
       if(!data.error){
-        setEstablecimientos(data)
+        setEstablishments(data)
       }
       else{
         alert(data.error)
@@ -23,7 +23,7 @@ export default function ListoEstablishmentsView() {
 
     }
 
-    obtenerEstablecimientos()
+    obtainEstablishments()
 
   }, [])
 
@@ -89,7 +89,7 @@ const styles = {
 
   td:{
     padding:"10px",
-    borderBottom:"1px solid #ddd"
+    borderBottom:"1px solid #47ff14"
   }
 
 }
