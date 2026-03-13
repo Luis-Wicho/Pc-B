@@ -1,10 +1,11 @@
 "use client"
-
+import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function ListoEstablishmentsView() {
 
   const [establecimientos, setEstablecimientos] = useState<any[]>([])
+  const [busqueda, setBusqueda] = useState("")
 
   useEffect(() => {
 
@@ -20,6 +21,9 @@ export default function ListoEstablishmentsView() {
       else{
         alert(data.error)
       }
+      const establecimientosFiltrados = establecimientos.filter((e:any) =>
+  e.nombre_establecimiento.toLowerCase().includes(busqueda.toLowerCase())
+)
 
     }
 
@@ -30,8 +34,56 @@ export default function ListoEstablishmentsView() {
   return (
 
     <div>
+      <div style={{textAlign: "center"}}>
+        <h1 style={{marginBottom:"15px", fontFamily:"Arial, sans-serif", fontWeight:"bold", fontSize:"80px", color:"#000000"}}>Establecimientos</h1>
+      </div>
 
-      <h1 style={{marginBottom:"15px"}}>Establecimientos</h1>
+      <div style={{display:"flex", justifyContent:"center", marginBottom:"25px"}}>
+  <Image
+    src="/img/logoPC&B.png"
+    alt="Establecimientos"
+    width={200}
+    height={50}
+    style={{
+      borderRadius:"12px",
+      boxShadow:"0 4px 12px rgb(0, 0, 0)",
+      objectFit:"cover"
+    }}
+  />
+  <div style={{
+  display:"flex",
+  justifyContent:"space-between",
+  marginBottom:"20px",
+  alignItems:"center"
+}}>
+
+  <input
+    type="text"
+    placeholder="Buscar establecimiento..."
+    value={busqueda}
+    onChange={(e)=>setBusqueda(e.target.value)}
+    style={{
+      padding:"8px",
+      width:"250px",
+      borderRadius:"6px",
+      border:"1px solid #ccc"
+    }}
+  />
+
+  <button style={{
+    backgroundColor:"#27AE60",
+    color:"white",
+    padding:"10px 15px",
+    border:"none",
+    borderRadius:"6px",
+    cursor:"pointer",
+    fontWeight:"bold"
+  }}>
+    + Registrar
+  </button>
+
+</div>
+</div>
 
       <table style={{
         width:"100%",
@@ -40,7 +92,7 @@ export default function ListoEstablishmentsView() {
         boxShadow:"0 2px 8px rgba(0,0,0,0.1)"
       }}>
 
-        <thead style={{backgroundColor:"#00bbff", color:"white"}}>
+        <thead style={{backgroundColor:"#2980B9", color:"white"}}>
           <tr>
             <th style={styles.th}>Expediente</th>
             <th style={styles.th}>Nombre</th>
