@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Establishment } from "@/modules/Establishments/domain/establishment.entity"
-import { deleteEstablishment } from "../actions/deleteEstablishment.action"
-
+import {createEstablishment} from "@/modules/Establishments/presentation/actions/deleteEstablishment.action"
 export default function EstablishmentTable() {
 
   const [establishments, setEstablishments] = useState<Establishment[]>([])
@@ -20,7 +19,7 @@ export default function EstablishmentTable() {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteEstablishment({id})
+      //await deleteEstablishment({id})
       setEstablishments(prev =>
         prev.filter(e => e.id_establecimiento !== id)
       )

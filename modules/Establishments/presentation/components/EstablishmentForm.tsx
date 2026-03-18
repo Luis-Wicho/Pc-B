@@ -26,7 +26,7 @@ export default function EstablishmentForm() {
     e.preventDefault()
 
     try {
-      await createEstablishment(form)
+      //await createEstablishment(form)
 
       alert("Establecimiento creado correctamente")
 
