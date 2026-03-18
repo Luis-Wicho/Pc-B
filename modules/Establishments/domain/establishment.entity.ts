@@ -1,4 +1,7 @@
+import { Key } from "readline";
+
 export interface Establishment {
+  id: Key | null | undefined;
   id_establecimiento: number;
   no_expediente: string;
   nombre_establecimiento: string;
