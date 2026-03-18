@@ -1,19 +1,9 @@
-import { Usuarios as users } from "./users.entity";
+import { User } from "./users.entity"
 
-export interface UsuarioRepository {
-
-  // Obtener la lista de todos los usuarios
-  getAll(): Promise<users[]>;
-
-  // Registrar un nuevo usuario (Create)
-  create(usuario: users): Promise<users>;
-
-  // Actualizar datos de un usuario existente (Update)
-  update(usuario: users): Promise<users>;
-
-  // Buscar un usuario por su ID (Read)
-  findById(id: number): Promise<users | null>;
-
-  // Opcional: Buscar por nombre de usuario (útil para el Login)
-  findByUsername(nombre_usuario: string): Promise<users | null>;
+export interface UserRepository {
+  getAll(): Promise<User[]>
+  getById(id: number): Promise<User | null>
+  create(user: Omit<User, "id_usuario">): Promise<User>
+  update(id: number, user: Omit<User, "id_usuario">): Promise<User>
+  delete(id: number): Promise<void>
 }
