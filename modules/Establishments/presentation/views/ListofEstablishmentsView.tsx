@@ -12,7 +12,7 @@ export default function ListoEstablishmentsView() {
 
     const obtenerEstablecimientos = async () => {
 
-      const res = await fetch("/api/establishments")
+      const res = await fetch("/api/establecimientos")
       const data = await res.json()
 
       if(!data.error){
@@ -34,7 +34,7 @@ export default function ListoEstablishmentsView() {
 
   return (
 
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+    <div style={{ padding: "20px", fontFamily: "Arial", backgroundColor: "#ff9900" }}>
 
       {/* TITULO */}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -49,7 +49,8 @@ export default function ListoEstablishmentsView() {
         <div style={{
         display:"flex",
         alignContent:"left",
-        marginBottom:"30px"
+        marginBottom:"30px",
+        
       }}>
         <Image
           src="/img/logo_pcb.png"

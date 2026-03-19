@@ -12,7 +12,7 @@ export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
     const { data, error } = await supabase
       .from("establecimientos")
       .select("*")
-
+console.log(data, error)
     if (error) throw error
 
     return data as Establishment[]
