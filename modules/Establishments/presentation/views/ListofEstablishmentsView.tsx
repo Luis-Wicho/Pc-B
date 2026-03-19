@@ -34,24 +34,21 @@ export default function ListoEstablishmentsView() {
 
   return (
 
-    <div>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
 
       {/* TITULO */}
-      <div style={{textAlign:"center", marginBottom:"20px"}}>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <h1 style={{
-          fontFamily:"Arial",
-          fontWeight:"bold",
-          fontSize:"60px",
-          color:"#000"
+          fontWeight: "bold",
+          fontSize: "48px",
+          color: "#000",
+          margin: 0
         }}>
-          Establecimientos
+          Listado de establecimientos
         </h1>
-      </div>
-
-      {/* LOGO */}
-      <div style={{
+        <div style={{
         display:"flex",
-        justifyContent:"center",
+        alignContent:"left",
         marginBottom:"30px"
       }}>
         <Image
@@ -60,117 +57,124 @@ export default function ListoEstablishmentsView() {
           width={220}
           height={120}
           style={{
-            borderRadius:"10px",
-            boxShadow:"0 6px 15px rgba(0,0,0,0.25)"
           }}
         />
       </div>
+      </div>
 
-      {/* BUSCADOR Y BOTON */}
+      {/* BUSCADOR */}
       <div style={{
-        display:"flex",
-        justifyContent:"space-between",
-        marginBottom:"20px",
-        alignItems:"center"
+        display: "flex",
+        justifyContent: "flex-start",
+        marginBottom: "20px",
+        alignItems: "center"
       }}>
-
+        <span style={{ marginRight: "10px", fontWeight: "bold" }}>Buscar</span>
         <input
           type="text"
-          placeholder="Buscar establecimiento..."
+          placeholder=""
           value={busqueda}
-          onChange={(e)=>setBusqueda(e.target.value)}
+          onChange={(e) => setBusqueda(e.target.value)}
           style={{
-            padding:"8px",
-            width:"250px",
-            borderRadius:"6px",
-            border:"1px solid #ccc"
+            padding: "6px 10px",
+            width: "300px",
+            borderRadius: "4px",
+            border: "1px solid #999"
           }}
         />
-
-        <button style={{
-          backgroundColor:"#27AE60",
-          color:"white",
-          padding:"10px 15px",
-          border:"none",
-          borderRadius:"6px",
-          cursor:"pointer",
-          fontWeight:"bold"
-        }}>
-          + Registrar
-        </button>
-
       </div>
 
       {/* TABLA */}
       <table style={{
-        width:"100%",
-        borderCollapse:"collapse",
-        fontFamily:"Arial",
-        boxShadow:"0 2px 8px rgba(0,0,0,0.1)"
+        width: "100%",
+        borderCollapse: "collapse",
+        boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+        fontSize: "14px"
       }}>
 
-        <thead style={{backgroundColor:"#2980B9", color:"white"}}>
+        <thead style={{ backgroundColor: "#D3D3D3", color: "#000" }}>
           <tr>
-            <th style={styles.th}>Expediente</th>
-            <th style={styles.th}>Nombre</th>
+            <th style={styles.th}>No. Expe Fecha E</th>
+            <th style={styles.th}>Establecimiento</th>
             <th style={styles.th}>Propietario</th>
             <th style={styles.th}>Dirección</th>
-            <th style={styles.th}>Estatus</th>
-            <th style={styles.th}>Acciones</th>
+            <th style={styles.th}>Estatu</th>
+            <th style={styles.th}>Giro</th>
+            <th style={styles.th}>Tama</th>
+            <th style={styles.th}>No. Ofici</th>
+            <th style={styles.th}>Observac</th>
+            <th style={styles.th}>Accio</th>
           </tr>
         </thead>
 
         <tbody>
-
-          {establecimientosFiltrados.map((e:any, index:number) => (
-
+          {establecimientosFiltrados.map((e: any, index: number) => (
             <tr
-              key={e.id_establecimiento}
+              key={e.id_establecimiento || index}
               style={{
                 backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white"
               }}
             >
-
-              <td style={styles.td}>{e.no_expediente}</td>
+              <td style={styles.td}>{e.no_expediente || ""}</td>
               <td style={styles.td}>{e.nombre_establecimiento}</td>
               <td style={styles.td}>{e.nombre_propietario}</td>
               <td style={styles.td}>{e.direccion}</td>
-              <td style={styles.td}>{e.estatus}</td>
-
               <td style={styles.td}>
-
-                <button style={{
-                  backgroundColor:"#F39C12",
-                  color:"white",
-                  border:"none",
-                  padding:"5px 10px",
-                  marginRight:"5px",
-                  borderRadius:"4px",
-                  cursor:"pointer"
+                <span style={{
+                  color: e.estatus === "Activo" ? "#2ECC71" : 
+                         e.estatus === "Pendi" ? "#F39C12" : 
+                         e.estatus === "Inactiv" ? "#E74C3C" : "inherit",
+                  fontWeight: e.estatus ? "bold" : "normal"
                 }}>
-                  Editar
-                </button>
-
-                <button style={{
-                  backgroundColor:"#E74C3C",
-                  color:"white",
-                  border:"none",
-                  padding:"5px 10px",
-                  borderRadius:"4px",
-                  cursor:"pointer"
-                }}>
-                  Eliminar
-                </button>
-
+                  {e.estatus || ""}
+                </span>
               </td>
-
+              <td style={styles.td}>{e.giro || ""}</td>
+              <td style={styles.td}>{e.tama || ""}</td>
+              <td style={styles.td}>{e.no_oficio || ""}</td>
+              <td style={styles.td}>{e.observaciones || ""}</td>
+              <td style={styles.td}>
+                <button style={styles.checkBtn}>☑️</button>
+              </td>
             </tr>
-
           ))}
-
         </tbody>
 
       </table>
+
+      {/* BOTON REGISTRAR Y PAGINACION */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "20px"
+      }}>
+        <button style={{
+          backgroundColor: "#27AE60",
+          color: "white",
+          padding: "8px 20px",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontWeight: "bold",
+          fontSize: "16px"
+        }}>
+          Registrar nuevo establecimiento
+        </button>
+
+        <div style={{
+          display: "flex",
+          gap: "8px",
+          fontSize: "16px"
+        }}>
+          <span style={styles.pageItem}>«</span>
+          <span style={{...styles.pageItem, fontWeight:"bold"}}>1</span>
+          <span style={styles.pageItem}>2</span>
+          <span style={styles.pageItem}>3</span>
+          <span style={styles.pageItem}>4</span>
+          <span style={styles.pageItem}>»</span>
+        </div>
+      </div>
 
     </div>
 
@@ -179,14 +183,33 @@ export default function ListoEstablishmentsView() {
 
 const styles = {
 
-  th:{
-    padding:"12px",
-    textAlign:"left" as const
+  th: {
+    padding: "10px 8px",
+    textAlign: "left" as const,
+    fontWeight: "bold",
+    borderBottom: "1px solid #aaa",
+    fontSize: "13px"
   },
 
-  td:{
-    padding:"10px",
-    borderBottom:"1px solid #ddd"
+  td: {
+    padding: "8px",
+    borderBottom: "1px solid #ddd",
+    fontSize: "13px"
+  },
+
+  checkBtn: {
+    background: "none",
+    border: "none",
+    fontSize: "18px",
+    cursor: "pointer",
+    color: "#555",
+    padding: "0 5px"
+  },
+
+  pageItem: {
+    padding: "4px 8px",
+    cursor: "pointer",
+    color: "#2980B9"
   }
 
 }
