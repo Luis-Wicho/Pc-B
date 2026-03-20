@@ -34,10 +34,14 @@ export default function RegistrarEstablecimientoView(){
 
   alert("Establecimiento registrado")
  }
+ 
 
  return(
 
+   
+
   <div>
+
 
    <h1>Registrar Establecimiento</h1>
 
