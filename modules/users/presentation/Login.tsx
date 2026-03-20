@@ -1,9 +1,11 @@
-
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function Login() {
+
+  const router = useRouter()
   return (
     <div className="flex items-center justify-center min-h-screen bg-orange-500">
       
@@ -39,7 +41,7 @@ export default function Login() {
         {/* Botón Registrar */}
         <button
           className="block w-72 mx-auto mb-4 py-4 text-lg bg-gray-800 text-white rounded-md hover:bg-gray-600 transition"
-          onClick={() => alert("Ir a registro")}
+          onClick={() => router.push("/users/register")}
         >
           Registrar
         </button>

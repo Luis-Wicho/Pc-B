@@ -19,7 +19,7 @@ const UserIcon = () => (
   </svg>
 );
 
-export default function Login() {
+export default function StartView() {
   // Estados para capturar los datos (opcional, pero buena práctica)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
