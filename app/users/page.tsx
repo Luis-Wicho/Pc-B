@@ -1,4 +1,4 @@
-import ListUsersView from "@/modules/Users/presentation/ListUsersView"
+import ListUsersView from "@/modules/users/presentation/ListUsersView";
 
 export default function Page() {
   return <ListUsersView />
