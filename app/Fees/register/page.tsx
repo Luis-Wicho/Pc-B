@@ -1,5 +1,5 @@
-import ListFeesView from "@/modules/Fees/presentation/views/ListFeesView";
+import ListFeesView from "@/modules/Fees/Presentation/views/ListFeesView";
 
-export default function Page() {
+export default function FeesPage() {
   return <ListFeesView />;
 }
