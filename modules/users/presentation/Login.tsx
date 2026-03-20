@@ -10,14 +10,23 @@ export default function Login() {
       <div className="text-center">
 
         {/* Logo */}
-        <div className="bg-white rounded-lg p-4 mb-6 flex justify-center">
-          <Image
-           src="/img/logo_pcb.png" // cambia por tu imagen
-            alt="Logo"
-            width={190}
-            height={190}
-          />
-        </div>
+        <div className="p-4 mb-6 flex flex-col items-center">
+  
+  <Image
+    src="/img/Pcblogo.png"
+    alt="Logo"
+    width={190}
+    height={190}
+  />
+
+  {/* Texto debajo del logo */}
+  <p className="mt-4 text-center text-xl font-semibold text-gray-800 leading-tight">
+    PROTECCIÓN CIVIL<br />
+    Y BOMBEROS<br />
+    IZÚCAR DE MATAMOROS
+  </p>
+
+</div>
 
         {/* Botón Inicio de sesión */}
         <button
