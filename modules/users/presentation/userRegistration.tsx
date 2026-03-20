@@ -34,7 +34,7 @@ export default function userRegistration() {
       <div className="bg-white w-full max-w-4xl p-8 rounded-2xl shadow-2xl">
         
         <h2 className="text-3xl font-bold text-gray-800 mb-8 border-b pb-4 text-center">
-          Registro de Expediente
+          Registro
         </h2>
 
         <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
