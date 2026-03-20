@@ -87,5 +87,3 @@ export class FeesRepositoryImpl implements FeesRepository {
     return true;
   }
 }
-
-export const feesRepository = new FeesRepositoryImpl();
