@@ -2,9 +2,10 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function ListoEstablishmentsView() {
-
+  const router = useRouter()
   const [establecimientos, setEstablecimientos] = useState<any[]>([])
   const [busqueda, setBusqueda] = useState("")
 
@@ -41,10 +42,10 @@ export default function ListoEstablishmentsView() {
         <h1 style={{
           fontWeight: "bold",
           fontSize: "48px",
-          color: "#000",
+          color: "rgb(31, 41, 55)",
           margin: 0
         }}>
-          Listado de establecimientos
+          Lista De Establecimientos
         </h1>
         <div style={{
         display:"flex",
@@ -53,10 +54,10 @@ export default function ListoEstablishmentsView() {
         
       }}>
         <Image
-          src="/img/logo_pcb.png"
+          src="/img/Pcblogo.png"
           alt="Logo PcB"
-          width={220}
-          height={120}
+          width={200}
+          height={100}
           style={{
           }}
         />
@@ -88,9 +89,13 @@ export default function ListoEstablishmentsView() {
       {/* TABLA */}
       <table style={{
         width: "100%",
-        borderCollapse: "collapse",
+        borderCollapse: "separate",
+        borderSpacing: 0,
+        borderRadius: "12px",
+        overflow: "hidden",
         boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
         fontSize: "14px"
+        
       }}>
 
         <thead style={{ backgroundColor: "#D3D3D3", color: "#000" }}>
@@ -150,18 +155,21 @@ export default function ListoEstablishmentsView() {
         alignItems: "center",
         marginTop: "20px"
       }}>
-        <button style={{
-          backgroundColor: "#27AE60",
-          color: "white",
-          padding: "8px 20px",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontWeight: "bold",
-          fontSize: "16px"
-        }}>
-          Registrar nuevo establecimiento
-        </button>
+        <button
+  onClick={() => router.push("/Establishments/register")}
+  style={{
+    backgroundColor: "#27AE60",
+    color: "white",
+    padding: "8px 20px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: "16px"
+  }}
+>
+  Registrar nuevo establecimiento
+</button>
 
         <div style={{
           display: "flex",
