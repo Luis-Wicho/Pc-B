@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UserRegistrationView() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
     nombres: "",
@@ -134,7 +136,7 @@ export default function UserRegistrationView() {
         <div className="mt-8 text-center border-t border-white/20 pt-6">
           <p className="text-white text-sm">
             ¿Ya tienes una cuenta?{" "}
-            <Link href="/login" className="font-bold hover:underline text-gray-900">
+            <Link href="/users/start" className="font-bold hover:underline text-gray-900" onClick={() => router.push("users/start")}>
               Inicia sesión aquí
             </Link>
           </p>
