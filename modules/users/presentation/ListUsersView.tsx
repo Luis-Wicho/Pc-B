@@ -7,35 +7,13 @@ import { useRouter } from "next/navigation";
 export default function ListaUsuarios() {
     const router = useRouter();
 
-<<<<<<< HEAD
   const obtenerUsuarios = async () => {
+  
     try {
       setCargando(true)
       const res = await fetch("/api/users", { cache: "no-store" })
       const data = await res.json()
-=======
-  const [usuarios, setUsuarios] = useState([
-    {
-      username: "Edgar_24",
-      nombre: "Edgar Eduardo Moreno Rocha",
-      celular: "2431021333",
-      seleccionado: false,
-    },
-    {
-      username: "Calzado_Rodriguez",
-      nombre: "Jaime Jared Rodriguez",
-      celular: "2431025658",
-      seleccionado: false,
-    },
-    {
-      username: "Edgar_24",
-      nombre: "Edgar Eduardo Moreno Rocha",
-      celular: "2431021333",
-      seleccionado: true,
-    },
-  ]);
->>>>>>> d4ceeb5e431390df024db37eb692a863640569a4
-
+      
   const [busqueda, setBusqueda] = useState("");
 
   const toggleSeleccion = (index: number) => {
