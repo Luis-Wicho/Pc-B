@@ -1,5 +1,4 @@
-import Login from "@/modules/Users/presentation/Login";
-
+import ListUsersView from "@/modules/Users/presentation/ListUsersView";
 export default function Page(){
-    return <Login/>
+    return <ListUsersView/>
 }

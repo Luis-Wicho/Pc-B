@@ -33,7 +33,7 @@ export default function Login() {
         {/* Botón Inicio de sesión */}
         <button
           className="block w-72 mx-auto mb-4 py-4 text-lg bg-gray-800 text-white rounded-md hover:bg-gray-600 transition"
-          onClick={() => router.push("users/start")}
+          onClick={() => router.push("/users/start")}
         >
           Inicio de sesión
         </button>

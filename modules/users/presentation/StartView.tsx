@@ -62,14 +62,14 @@ export default function StartView() {
             {/* Campo Correo */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Correo Electrónico
+                Nombre de Usuario
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ejemplo@correo.com"
+                placeholder="Ejemplo23"
                 className="block w-full px-4 py-3 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 shadow-sm"
               />
             </div>
@@ -94,7 +94,7 @@ export default function StartView() {
               onClick={handleSave}
               className="block w-full mt-8 py-4 text-xl font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition duration-150 active:scale-[0.98] shadow-md"
             >
-              Guardar
+              Iniciar Sesión
             </button>
 
           </div>
