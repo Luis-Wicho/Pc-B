@@ -1,20 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function ListaUsuarios() {
-    const router = useRouter();
+  const router = useRouter();
+
+  const [usuarios, setUsuarios] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const obtenerUsuarios = async () => {
-  
     try {
-      setCargando(true)
-      const res = await fetch("/api/users", { cache: "no-store" })
-      const data = await res.json()
-      
-  const [busqueda, setBusqueda] = useState("");
+      setCargando(true);
+      const res = await fetch("/api/users", { cache: "no-store" });
+      const data = await res.json();
+
+      // agregamos campo seleccionado
+      const usuariosConSeleccion = data.map((u) => ({
+        ...u,
+        seleccionado: false,
+      }));
+
+      setUsuarios(usuariosConSeleccion);
+    } catch (error) {
+      console.error("Error al obtener usuarios:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []);
 
   const toggleSeleccion = (index: number) => {
     const nuevos = [...usuarios];
@@ -29,12 +47,10 @@ export default function ListaUsuarios() {
   return (
     <div className="min-h-screen bg-orange-500 p-6">
 
-      {/* Header */}
       <h1 className="text-4xl font-bold text-center mb-6">
         Protección Civil
       </h1>
 
-      {/* Buscador */}
       <div className="flex justify-between items-center mb-6">
         <span className="font-semibold">Registros</span>
 
@@ -50,7 +66,6 @@ export default function ListaUsuarios() {
         </div>
       </div>
 
-      {/* Lista */}
       <div className="flex flex-col gap-6">
         {filtrados.map((user, index) => (
           <div
@@ -69,7 +84,6 @@ export default function ListaUsuarios() {
               </p>
             </div>
 
-            {/* Checkbox */}
             <div
               onClick={() => toggleSeleccion(index)}
               className={`ml-4 w-6 h-6 border-2 border-black flex items-center justify-center cursor-pointer ${
@@ -82,7 +96,6 @@ export default function ListaUsuarios() {
         ))}
       </div>
 
-      {/* Botones */}
       <div className="flex flex-wrap gap-4 mt-10 items-center">
         <button className="border-2 border-black px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black">
           Agregar +
