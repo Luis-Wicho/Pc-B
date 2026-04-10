@@ -1,240 +1,191 @@
-"use client"
-import { useState, useEffect } from "react";
+"use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
+type User = {
+  id_usuario: number;
+  nombre_usuario: string;
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string; // 👈 corregido nombre
+  contrasena: string;
+};
 
-
-export default function ListaUsuarios() {
-
-  const router = useRouter();
-
-
-
-  const [usuarios, setUsuarios] = useState([]);
-
+export default function ListUsersView() {
+  const [usuarios, setUsuarios] = useState<User[]>([]);
   const [busqueda, setBusqueda] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(true);
 
-  const [cargando, setCargando] = useState(false);
-
-
-
+  // 🔥 Obtener usuarios
   const obtenerUsuarios = async () => {
-
     try {
-
       setCargando(true);
 
       const res = await fetch("/api/users", { cache: "no-store" });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.error || "Error al obtener usuarios");
+        return;
+      }
+
+      setUsuarios(data);
+    } catch {
+      setMensaje("No fue posible cargar usuarios");
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []);
+
+  // 🔎 Filtro
+  const usuariosFiltrados = useMemo(() => {
+    const texto = busqueda.toLowerCase().trim();
+    if (!texto) return usuarios;
+
+    return usuarios.filter((u) => {
+      const nombreCompleto =
+        `${u.nombre} ${u.apellido_paterno} ${u.apellido_materno}`.toLowerCase();
+
+      return (
+        u.nombre_usuario.toLowerCase().includes(texto) ||
+        nombreCompleto.includes(texto)
+      );
+    });
+  }, [usuarios, busqueda]);
+
+  // 🗑️ Eliminar
+  const eliminarUsuario = async (id: number) => {
+    const confirmar = window.confirm("¿Deseas eliminar este usuario?");
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`/api/users/${id}`, {
+        method: "DELETE",
+      });
 
       const data = await res.json();
 
+      if (!res.ok) {
+        setMensaje(data.error || "Error al eliminar usuario");
+        return;
+      }
 
-
-      // agregamos campo seleccionado
-
-      const usuariosConSeleccion = data.map((u) => ({
-
-        ...u,
-
-        seleccionado: false,
-
-      }));
-
-
-
-      setUsuarios(usuariosConSeleccion);
-
-    } catch (error) {
-
-      console.error("Error al obtener usuarios:", error);
-
-    } finally {
-
-      setCargando(false);
-
+      setMensaje(data.message);
+      obtenerUsuarios();
+    } catch {
+      setMensaje("No fue posible eliminar el usuario");
     }
-
   };
-
-
-
-  useEffect(() => {
-
-    obtenerUsuarios();
-
-  }, []);
-
-
-
-  const toggleSeleccion = (index: number) => {
-
-    const nuevos = [...usuarios];
-
-    nuevos[index].seleccionado = !nuevos[index].seleccionado;
-
-    setUsuarios(nuevos);
-
-  };
-
-
-
-  const filtrados = usuarios.filter((u) =>
-
-    u.username.toLowerCase().includes(busqueda.toLowerCase())
-
-  );
-
-
 
   return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="mx-auto max-w-6xl rounded-2xl bg-white p-6 shadow-md">
 
-    <div className="min-h-screen bg-orange-500 p-6">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-gray-800">Usuarios</h1>
 
-
-
-      <h1 className="text-4xl font-bold text-center mb-6">
-
-        Protección Civil
-
-      </h1>
-
-
-
-      <div className="flex justify-between items-center mb-6">
-
-        <span className="font-semibold">Registros</span>
-
-
-
-        <div className="flex items-center gap-2 ">
-
-          <span>Buscar Registro</span>
-
-          <input
-
-            type="text"
-
-            placeholder="Buscar..."
-
-            value={busqueda}
-
-            onChange={(e) => setBusqueda(e.target.value)}
-
-            className="border-2 border-black p-2 bg-white "
-
-          />
-
+          <Link
+            href="/usuarios/nuevo"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            Nuevo usuario
+          </Link>
         </div>
 
-      </div>
+        {/* Buscador */}
+        <input
+          type="text"
+          placeholder="Buscar usuario..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          className="mb-4 w-full rounded-lg border border-gray-300 px-4 py-3"
+        />
 
-
-
-      <div className="flex flex-col gap-6">
-
-        {filtrados.map((user, index) => (
-
-          <div
-
-            key={index}
-
-            className="bg-gray-200 border-2 border-black p-4 flex justify-between items-center"
-
-          >
-
-            <div className="w-full">
-
-              <p className="border-b border-black py-1 text-black">
-
-                Usuario: {user.username}
-
-              </p>
-
-              <p className="border-b border-black py-1 text-black">
-
-                Nombre: {user.nombre}
-
-              </p>
-
-              <p className="py-1 text-black">
-
-                Celular: {user.celular}
-
-              </p>
-
-            </div>
-
-
-
-            <div
-
-              onClick={() => toggleSeleccion(index)}
-
-              className={`ml-4 w-6 h-6 border-2 border-black flex items-center justify-center cursor-pointer ${
-
-                user.seleccionado ? "bg-orange-400" : "bg-white"
-
-              }`}
-
-            >
-
-              {user.seleccionado && "✓"}
-
-            </div>
-
+        {/* Mensaje */}
+        {mensaje && (
+          <div className="mb-4 rounded-lg bg-green-100 px-4 py-3 text-green-700">
+            {mensaje}
           </div>
+        )}
 
-        ))}
+        {/* Tabla */}
+        {cargando ? (
+          <p>Cargando usuarios...</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-gray-200 text-left">
+                  <th className="px-4 py-3">ID</th>
+                  <th className="px-4 py-3">Usuario</th>
+                  <th className="px-4 py-3">Nombre</th>
+                  <th className="px-4 py-3 text-center">Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {usuariosFiltrados.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="text-center py-4">
+                      No hay usuarios
+                    </td>
+                  </tr>
+                ) : (
+                  usuariosFiltrados.map((u) => (
+                    <tr key={u.id_usuario} className="border-b hover:bg-gray-50">
+                      <td className="px-4 py-3">{u.id_usuario}</td>
+
+                      <td className="px-4 py-3">
+                        {u.nombre_usuario}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        {u.nombre} {u.apellido_paterno} {u.apellido_materno}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <div className="flex justify-center gap-2">
+                          
+                          <Link
+                            href={`/usuarios/${u.id_usuario}`}
+                            className="rounded bg-gray-600 px-3 py-1 text-white hover:bg-gray-700"
+                          >
+                            Ver
+                          </Link>
+
+                          <Link
+                            href={`/usuarios/${u.id_usuario}/editar`}
+                            className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
+                          >
+                            Editar
+                          </Link>
+
+                          <button
+                            onClick={() => eliminarUsuario(u.id_usuario)}
+                            className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+                          >
+                            Eliminar
+                          </button>
+
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+
+            </table>
+          </div>
+        )}
 
       </div>
-
-
-
-      <div className="flex flex-wrap gap-4 mt-10 items-center">
-
-        <button className="border-2 border-black px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black">
-
-          Agregar +
-
-        </button>
-
-
-
-        <button className="border-2 border-black px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black">
-
-          Eliminar 🗑
-
-        </button>
-
-
-
-        <button className="border-2 border-black px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black">
-
-          Tarifa 💲
-
-        </button>
-
-
-
-        <button className="border-2 border-black px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black">
-
-          Calendario 📅
-
-        </button>
-
-
-
-        <button className="ml-auto border-2 border-black px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black">
-
-          Editar ✏
-
-        </button>
-
-      </div>
-
     </div>
-
   );
-
 }
