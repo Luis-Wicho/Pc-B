@@ -1,4 +1,4 @@
-import { UserRepository } from "../domain/users.repository"
+import { UserRepository } from "../domain/users.repository";
 
 export class DeleteUser {
   constructor(private repository: UserRepository) {}

@@ -1,4 +1,4 @@
-import { User } from "../domain/users.entity"
+import { User } from "@supabase/supabase-js"
 import { UserRepository } from "../domain/users.repository"
 
 export class UpdateUser {

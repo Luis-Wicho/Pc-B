@@ -1,5 +1,5 @@
-import ListOfEstablishmentsView from "@/modules/Establishments/presentation/views/ListofEstablishmentsView";
+import ListofEstablishmentsView from "@/modules/Establishments/presentation/views/ListofEstablishmentsView";
 
 export default function Page() {
-  return <ListOfEstablishmentsView/>
+  return <ListofEstablishmentsView/>
 }

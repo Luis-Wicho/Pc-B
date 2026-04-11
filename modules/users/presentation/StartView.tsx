@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-// Icono de usuario SVG simple
+// Icono de usuario SVG actualizado con los colores de la paleta
 const UserIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="currentColor"
-    className="w-16 h-16 mx-auto text-gray-800 mb-6"
+    // text-teal-700 (#1E838F) para el icono de usuario
+    className="w-20 h-20 mx-auto text-teal-700 mb-8 border-4 border-teal-100 rounded-full p-3 bg-teal-50"
   >
     <path
       fillRule="evenodd"
@@ -19,64 +21,85 @@ const UserIcon = () => (
   </svg>
 );
 
-export default function StartView() {
-  // Estados para capturar los datos (opcional, pero buena práctica)
+export default function () {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSave = () => {
-    // Aquí iría la lógica para guardar/enviar los datos
     console.log("Datos a guardar:", { email, password });
     alert(`Guardando:\nCorreo: ${email}\n(Contraseña oculta)`);
   };
 
   return (
-    // Contenedor principal centrado
-    <div className="flex items-center justify-center min-h-screen bg-orange-500 p-4">
+    // 1. Fondo: Cambiado de bg-orange-500 a bg-slate-50 (Gris muy claro #F5F5F5)
+    <div className="flex items-center justify-center min-h-screen bg-slate-50 p-6 font-lato">
       
-      {/* Tarjeta de Login - Estructura de dos columnas en pantallas medianas+ */}
-      <div className="bg-white/10 p-8 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-10 backdrop-blur-sm">
+      {/* 2. Tarjeta Principal: Añadida sombra sutil, bordes redondeados y fondo blanco */}
+      <div className="bg-white p-12 rounded-3xl shadow-xl flex flex-col md:flex-row items-center gap-12 border border-slate-100 w-full max-w-6xl mx-4">
         
-        {/* COLUMNA IZQUIERDA: Panel del Logo */}
-        <div className="flex-shrink-0">
-          <div className="bg-white rounded-2xl p-6 shadow-lg flex justify-center items-center">
-            <Image
-              src="/img/logo_pcb.png" // Asegúrate de que esta ruta sea correcta en tu carpeta /public
-              alt="Logo PCB"
-              width={150}
-              height={150}
-              className="object-contain"
-            />
+        {/* COLUMNA IZQUIERDA: Panel del Logo e Identidad */}
+        <div className="flex-shrink-0 flex flex-col items-center md:items-start text-center md:text-left space-y-6 md:w-1/3">
+          {/* Logo */}
+          <div className="p-2">
+            <div className="p-2 mb-4">
+                       <Image
+                         src="/img/Pcblogo.png"
+                         alt="Logo Protección Civil y Bomberos Izúcar"
+                         width={160} // Ligeramente más pequeño para mejor balance
+                         height={160}
+                         priority
+                       />
+                     </div>
+          </div>
+
+          {/* Texto de Identidad */}
+          <div className="space-y-1">
+            <p className="text-3xl font-bold text-teal-700 tracking-tight leading-tight">
+              PROTECCIÓN CIVIL
+            </p>
+            <p className="text-2xl font-semibold text-orange-600 leading-tight">
+              Y BOMBEROS
+            </p>
+            <p className="text-lg font-normal text-slate-900 pt-2">
+              IZÚCAR DE MATAMOROS, PUE.
+            </p>
           </div>
         </div>
 
         {/* COLUMNA DERECHA: Formulario */}
-        <div className="flex-grow w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+        <div className="flex-grow w-full max-w-lg bg-white p-10 rounded-2xl shadow-inner border border-slate-100">
           
           {/* Icono de Persona */}
           <UserIcon />
 
+          {/* Título del Formulario */}
+          <h1 className="text-3xl font-extrabold text-slate-950 text-center mb-10 tracking-tight">
+            Iniciar Sesión
+          </h1>
+
           {/* Formulario */}
           <div className="space-y-6">
             
-            {/* Campo Correo */}
+            {/* Campo Correo / Usuario */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Nombre de Usuario
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                Nombre de Usuario o Correo
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ejemplo23"
-                className="block w-full px-4 py-3 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 shadow-sm"
+                placeholder="Ejemplo23 o correo@dominio.com"
+                // Inputs: Estilizados con bordes sutiles y focus Teal
+                className="block w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400"
               />
             </div>
 
             {/* Campo Contraseña */}
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                 Contraseña
               </label>
               <input
@@ -85,17 +108,31 @@ export default function StartView() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="block w-full px-4 py-3 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 shadow-sm"
+                // Inputs: Estilizados con bordes sutiles y focus Teal
+                className="block w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400"
               />
             </div>
 
-            {/* Botón Guardar */}
+            {/* Ayuda: Enlace sutil en Naranja */}
+            <p className="text-sm text-right text-orange-600 hover:text-orange-700 transition cursor-pointer">
+              ¿Olvidaste tu contraseña?
+            </p>
+
+            {/* Botón Guardar / Iniciar Sesión: Cambiado de bg-gray-900 a bg-teal-700 (#1E838F) */}
             <button
               onClick={handleSave}
-              className="block w-full mt-8 py-4 text-xl font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition duration-150 active:scale-[0.98] shadow-md"
+              className="block w-full mt-10 py-4 text-xl font-bold bg-teal-700 text-white rounded-xl hover:bg-teal-800 transition duration-300 shadow-md shadow-teal-700/20 active:scale-95"
             >
               Iniciar Sesión
             </button>
+
+            {/* Registrar: Enlace sutil al final */}
+            <p className="text-center text-slate-600 pt-6">
+              ¿Eres un establecimiento nuevo?{' '}
+              <span className="font-semibold text-teal-700 hover:text-teal-900 cursor-pointer">
+                Registrar
+              </span>
+            </p>
 
           </div>
         </div>
