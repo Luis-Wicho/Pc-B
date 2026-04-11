@@ -1,34 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function ListaUsuarios() {
-    const router = useRouter();
+  const router = useRouter();
 
-  const obtenerUsuarios = async () => {
-  
-    try {
-      setCargando(true)
-      const res = await fetch("/api/users", { cache: "no-store" })
-      const data = await res.json()
-      
+  const [usuarios, setUsuarios] = useState<any[]>([]);
   const [busqueda, setBusqueda] = useState("");
+  const [cargando, setCargando] = useState(false);
 
+  // Obtener usuarios
+  const obtenerUsuarios = async () => {
+    try {
+      setCargando(true);
+      const res = await fetch("/api/users", { cache: "no-store" });
+      const data = await res.json();
+
+      // Agregar propiedad seleccionado
+      const usuariosConSeleccion = data.map((u: any) => ({
+        ...u,
+        seleccionado: false,
+      }));
+
+      setUsuarios(usuariosConSeleccion);
+    } catch (error) {
+      console.error("Error al obtener usuarios:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []);
+
+  // Seleccionar usuario
   const toggleSeleccion = (index: number) => {
     const nuevos = [...usuarios];
     nuevos[index].seleccionado = !nuevos[index].seleccionado;
     setUsuarios(nuevos);
   };
 
+  // Filtrar usuarios
   const filtrados = usuarios.filter((u) =>
     u.username.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-orange-500 p-6">
-
       {/* Header */}
       <h1 className="text-4xl font-bold text-center mb-6">
         Protección Civil
@@ -38,17 +58,20 @@ export default function ListaUsuarios() {
       <div className="flex justify-between items-center mb-6">
         <span className="font-semibold">Registros</span>
 
-        <div className="flex items-center gap-2 ">
+        <div className="flex items-center gap-2">
           <span>Buscar Registro</span>
           <input
             type="text"
             placeholder="Buscar..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="border-2 border-black p-2 bg-white "
+            className="border-2 border-black p-2 bg-white"
           />
         </div>
       </div>
+
+      {/* Loading */}
+      {cargando && <p className="text-center">Cargando...</p>}
 
       {/* Lista */}
       <div className="flex flex-col gap-6">
