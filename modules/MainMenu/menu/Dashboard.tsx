@@ -21,7 +21,7 @@ export default function Dashboard() {
     {
       titulo: "Tarifas",
       icono: "💲",
-      ruta: "/tarifas",
+      ruta: "/rates",
     },
     {
       titulo: "Reportes",
