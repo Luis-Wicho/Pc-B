@@ -13,7 +13,7 @@ export default function ListoEstablishmentsView() {
 
     const obtenerEstablecimientos = async () => {
 
-      const res = await fetch("/api/establecimientos")
+      const res = await fetch("/api/establishments")
       const data = await res.json()
 
       if(!data.error){
