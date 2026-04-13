@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image"; // Para el logo corporativo
+import { title } from "process";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -14,9 +15,9 @@ export default function Dashboard() {
       ruta: "/users",
     },
     {
-      titulo: "Calendario",
-      icono: "📅",
-      ruta: "/calendar",
+      titulo: "Establecimientos",
+      icono: "🏪",
+      ruta: "/Establishments",
     },
     {
       titulo: "Tarifas",
@@ -29,10 +30,11 @@ export default function Dashboard() {
       ruta: "/reportes",
     },
     {
-      titulo: "Establecimientos",
-      icono: "🏪",
-      ruta: "/Establishments",
+      titulo: "Documentos",
+       icono: "🗂️",
+       ruta: "/documents",
     },
+    
     // Añadimos una opción extra para que el sidebar se vea completo
     {
       titulo: "Configuración",
@@ -53,8 +55,8 @@ export default function Dashboard() {
           <Image
                         src="/img/Pcblogo.png"
                         alt="Logo Protección Civil y Bomberos Izúcar"
-                        width={160} // Ligeramente más pequeño para mejor balance
-                        height={160}
+                        width={120} // Ligeramente más pequeño para mejor balance
+                        height={120}
                         priority
                       />
           <div className="text-center mt-3">
@@ -85,7 +87,7 @@ export default function Dashboard() {
         {/* Sección del Pie del Sidebar: Cerrar Sesión */}
         <button
           className="flex items-center gap-4 w-full p-4 rounded-xl text-left text-lg font-medium bg-white text-teal-700 border-2 border-teal-700 hover:bg-teal-50 transition duración-300"
-          onClick={() => router.push("/logout")}
+          onClick={() => router.push("users/login")}
         >
           <span className="text-3xl">🚪</span>
           Cerrar Sesión
