@@ -1,224 +1,143 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ListoEstablishmentsView() {
-  const router = useRouter()
-  const [establecimientos, setEstablecimientos] = useState<any[]>([])
-  const [busqueda, setBusqueda] = useState("")
+  const router = useRouter();
+  const [establecimientos, setEstablecimientos] = useState<any[]>([]);
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
-
     const obtenerEstablecimientos = async () => {
+      const res = await fetch("/api/establishments");
+      const data = await res.json();
 
-      const res = await fetch("/api/establishments")
-      const data = await res.json()
-
-      if(!data.error){
-        setEstablecimientos(data)
-      }else{
-        alert(data.error)
+      if (!data.error) {
+        setEstablecimientos(data);
+      } else {
+        alert(data.error);
       }
+    };
 
-    }
+    obtenerEstablecimientos();
+  }, []);
 
-    obtenerEstablecimientos()
-
-  }, [])
-
-  // FILTRO DE BUSQUEDA
-  const establecimientosFiltrados = establecimientos.filter((e:any) =>
+  const establecimientosFiltrados = establecimientos.filter((e: any) =>
     e.nombre_establecimiento.toLowerCase().includes(busqueda.toLowerCase())
-  )
+  );
 
   return (
+    <div className="min-h-screen bg-slate-50 p-6 font-lato">
 
-    <div style={{ padding: "20px", fontFamily: "Arial", backgroundColor: "#ff9900" }}>
+      <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-lg border border-slate-100 p-8">
 
-      {/* TITULO */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h1 style={{
-          fontWeight: "bold",
-          fontSize: "48px",
-          color: "rgb(31, 41, 55)",
-          margin: 0
-        }}>
-          Lista De Establecimientos
-        </h1>
-        <div style={{
-        display:"flex",
-        alignContent:"left",
-        marginBottom:"30px",
-        
-      }}>
-        <Image
-          src="/img/Pcblogo.png"
-          alt="Logo PcB"
-          width={200}
-          height={100}
-          style={{
-          }}
-        />
-      </div>
-      </div>
+        {/* HEADER */}
+        <div className="flex flex-col items-center mb-8">
+          <Image
+            src="/img/Pcblogo.png"
+            alt="Logo"
+            width={120}
+            height={80}
+          />
 
-      {/* BUSCADOR */}
-      <div style={{
-        display: "flex",
-        justifyContent: "flex-start",
-        marginBottom: "20px",
-        alignItems: "center"
-      }}>
-        <span style={{ marginRight: "10px", fontWeight: "bold" }}>Buscar</span>
-        <input
-          type="text"
-          placeholder=""
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-          style={{
-            padding: "6px 10px",
-            width: "300px",
-            borderRadius: "4px",
-            border: "1px solid #999"
-          }}
-        />
-      </div>
-
-      {/* TABLA */}
-      <table style={{
-        width: "100%",
-        borderCollapse: "separate",
-        borderSpacing: 0,
-        borderRadius: "12px",
-        overflow: "hidden",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-        fontSize: "14px"
-        
-      }}>
-
-        <thead style={{ backgroundColor: "#D3D3D3", color: "#000" }}>
-          <tr>
-            <th style={styles.th}>No. Expe Fecha E</th>
-            <th style={styles.th}>Establecimiento</th>
-            <th style={styles.th}>Propietario</th>
-            <th style={styles.th}>Dirección</th>
-            <th style={styles.th}>Estatu</th>
-            <th style={styles.th}>Giro</th>
-            <th style={styles.th}>Tama</th>
-            <th style={styles.th}>No. Ofici</th>
-            <th style={styles.th}>Observac</th>
-            <th style={styles.th}>Accio</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {establecimientosFiltrados.map((e: any, index: number) => (
-            <tr
-              key={e.id_establecimiento || index}
-              style={{
-                backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white"
-              }}
-            >
-              <td style={styles.td}>{e.no_expediente || ""}</td>
-              <td style={styles.td}>{e.nombre_establecimiento}</td>
-              <td style={styles.td}>{e.nombre_propietario}</td>
-              <td style={styles.td}>{e.direccion}</td>
-              <td style={styles.td}>
-                <span style={{
-                  color: e.estatus === "Activo" ? "#2ECC71" : 
-                         e.estatus === "Pendi" ? "#F39C12" : 
-                         e.estatus === "Inactiv" ? "#E74C3C" : "inherit",
-                  fontWeight: e.estatus ? "bold" : "normal"
-                }}>
-                  {e.estatus || ""}
-                </span>
-              </td>
-              <td style={styles.td}>{e.giro || ""}</td>
-              <td style={styles.td}>{e.tama || ""}</td>
-              <td style={styles.td}>{e.no_oficio || ""}</td>
-              <td style={styles.td}>{e.observaciones || ""}</td>
-              <td style={styles.td}>
-                <button style={styles.checkBtn}>☑️</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-
-      </table>
-
-      {/* BOTON REGISTRAR Y PAGINACION */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20px"
-      }}>
-        <button
-  onClick={() => router.push("/Establishments/register")}
-  style={{
-    backgroundColor: "#27AE60",
-    color: "white",
-    padding: "8px 20px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "16px"
-  }}
->
-  Registrar nuevo establecimiento
-</button>
-
-        <div style={{
-          display: "flex",
-          gap: "8px",
-          fontSize: "16px"
-        }}>
-          <span style={styles.pageItem}>«</span>
-          <span style={{...styles.pageItem, fontWeight:"bold"}}>1</span>
-          <span style={styles.pageItem}>2</span>
-          <span style={styles.pageItem}>3</span>
-          <span style={styles.pageItem}>4</span>
-          <span style={styles.pageItem}>»</span>
+          <h1 className="text-3xl font-bold text-teal-700 mt-3">
+            Lista de Establecimientos
+          </h1>
         </div>
+
+        {/* BUSCADOR + BOTÓN */}
+        <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
+
+          <input
+            type="text"
+            placeholder="Buscar establecimiento..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="w-full md:w-1/3 px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-700"
+          />
+
+          <button
+            onClick={() => router.push("/Establishments/register")}
+            className="px-6 py-3 bg-teal-700 text-white rounded-xl font-semibold hover:bg-teal-800 transition shadow-md shadow-teal-700/20 active:scale-95"
+          >
+            + Registrar
+          </button>
+        </div>
+
+        {/* TABLA */}
+        <div className="overflow-x-auto rounded-xl border border-slate-200">
+          <table className="w-full text-sm">
+
+            <thead className="bg-teal-700 text-white">
+              <tr>
+                <th className="p-3 text-left">Expediente</th>
+                <th className="p-3 text-left">Establecimiento</th>
+                <th className="p-3 text-left">Propietario</th>
+                <th className="p-3 text-left">Dirección</th>
+                <th className="p-3 text-left">Estatus</th>
+                <th className="p-3 text-left">Giro</th>
+                <th className="p-3 text-left">Tamaño</th>
+                <th className="p-3 text-left">Oficio</th>
+                <th className="p-3 text-left">Acción</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {establecimientosFiltrados.map((e: any, index: number) => (
+                <tr
+                  key={index}
+                  className="border-b hover:bg-slate-50 transition"
+                >
+                  <td className="p-3">{e.no_expediente}</td>
+                  <td className="p-3">{e.nombre_establecimiento}</td>
+                  <td className="p-3">{e.nombre_propietario}</td>
+                  <td className="p-3">{e.direccion}</td>
+
+                  <td className="p-3">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold
+                      ${
+                        e.estatus === "Activo"
+                          ? "bg-green-100 text-green-700"
+                          : e.estatus === "Pendi"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : e.estatus === "Inactiv"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-slate-200 text-slate-700"
+                      }`}
+                    >
+                      {e.estatus}
+                    </span>
+                  </td>
+
+                  <td className="p-3">{e.giro}</td>
+                  <td className="p-3">{e.tama}</td>
+                  <td className="p-3">{e.no_oficio}</td>
+
+                  <td className="p-3">
+                    <button className="px-3 py-1 bg-teal-700 text-white rounded-lg text-xs hover:bg-teal-800 transition">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+        </div>
+
+        {/* PAGINACIÓN */}
+        <div className="flex justify-center mt-6 gap-2 text-sm">
+          <span className="px-3 py-1 rounded-lg cursor-pointer hover:bg-slate-200">«</span>
+          <span className="px-3 py-1 bg-teal-700 text-white rounded-lg">1</span>
+          <span className="px-3 py-1 cursor-pointer hover:bg-slate-200">2</span>
+          <span className="px-3 py-1 cursor-pointer hover:bg-slate-200">3</span>
+          <span className="px-3 py-1 cursor-pointer hover:bg-slate-200">»</span>
+        </div>
+
       </div>
-
     </div>
-
-  )
-}
-
-const styles = {
-
-  th: {
-    padding: "10px 8px",
-    textAlign: "left" as const,
-    fontWeight: "bold",
-    borderBottom: "1px solid #aaa",
-    fontSize: "13px"
-  },
-
-  td: {
-    padding: "8px",
-    borderBottom: "1px solid #ddd",
-    fontSize: "13px"
-  },
-
-  checkBtn: {
-    background: "none",
-    border: "none",
-    fontSize: "18px",
-    cursor: "pointer",
-    color: "#555",
-    padding: "0 5px"
-  },
-
-  pageItem: {
-    padding: "4px 8px",
-    cursor: "pointer",
-    color: "#2980B9"
-  }
-
+  );
 }
