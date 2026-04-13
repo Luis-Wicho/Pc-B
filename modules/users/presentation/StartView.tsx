@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/dist/client/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -118,6 +119,7 @@ export default function () {
               ¿Olvidaste tu contraseña?
             </p>
 
+            <div>
             {/* Botón Guardar / Iniciar Sesión: Cambiado de bg-gray-900 a bg-teal-700 (#1E838F) */}
             <button
               onClick={handleSave}
@@ -125,6 +127,8 @@ export default function () {
             >
               Iniciar Sesión
             </button>
+            <Link href="MainMenu"/>
+            </div>
 
             {/* Registrar: Enlace sutil al final */}
             <p className="text-center text-slate-600 pt-6">
