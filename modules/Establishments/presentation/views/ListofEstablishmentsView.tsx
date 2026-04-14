@@ -11,7 +11,7 @@ export default function ListoEstablishmentsView() {
 
   useEffect(() => {
     const obtenerEstablecimientos = async () => {
-      const res = await fetch("/api/establishments");
+      const res = await fetch("/api/Establishments");
       const data = await res.json();
 
       if (!data.error) {

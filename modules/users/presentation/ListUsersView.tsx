@@ -26,7 +26,7 @@ export default function ListUsersView() {
   const obtenerUsuarios = async () => {
     try {
       setCargando(true)
-      const res = await fetch("/api/usuarios", { cache: "no-store" })
+      const res = await fetch("/api/users", { cache: "no-store" });
       const data = await res.json()
       if (!res.ok) {
         setMensaje(data.error || "Error al obtener usuarios")
@@ -57,7 +57,7 @@ export default function ListUsersView() {
     const confirmar = window.confirm("¿Deseas eliminar este usuario?")
     if (!confirmar) return
     try {
-      const res = await fetch(`/api/usuarios/${id}`, { method: "DELETE" })
+      const res = await fetch(`/api/users/${id}`, { method: "DELETE" })
       const data = await res.json()
       if (!res.ok) {
         setMensaje(data.error || "Error al eliminar usuario")

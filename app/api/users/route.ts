@@ -1,4 +1,4 @@
-import { UsersRepositoryImpl } from "@/modules/userS/infrastructure/UsersRepositoryImpl"
+import { UsersRepositoryImpl } from "@/modules/Users/infrastructure/UsersRepositoryImpl"
 import { NextResponse } from "next/server"
 
 export async function GET() {
