@@ -1,3 +1,5 @@
+"use client";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { GetActivities } from "../application/getActivities";
 import { ActivityRepositoryImpl } from "../infrastructure/activity.repository.impl";
