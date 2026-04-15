@@ -22,15 +22,39 @@ const UserIcon = () => (
   </svg>
 );
 
-export default function () {
+export default function StartView() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSave = () => {
-    console.log("Datos a guardar:", { email, password });
-    alert(`Guardando:\nCorreo: ${email}\n(Contraseña oculta)`);
-  };
+  const handleSave = async () => {
+  try {
+    const res = await fetch("/api/users", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nombre_usuario: email,
+        contrasena: password,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Error al iniciar sesión");
+      return;
+    }
+
+    alert("Login correcto ✅");
+    router.push("/MainMenu");
+
+  } catch (error) {
+    console.error(error);
+    alert("Error en la conexión");
+  }
+};
 
   return (
     // 1. Fondo: Cambiado de bg-orange-500 a bg-slate-50 (Gris muy claro #F5F5F5)
@@ -85,14 +109,14 @@ export default function () {
             {/* Campo Correo / Usuario */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-                Nombre de Usuario o Correo
+                Nombre de Usuario
               </label>
               <input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ejemplo23 o correo@dominio.com"
+                placeholder="Ejemplo23"
                 // Inputs: Estilizados con bordes sutiles y focus Teal
                 className="block w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400"
               />

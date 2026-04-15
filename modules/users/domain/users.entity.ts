@@ -3,6 +3,6 @@ export interface User {
   nombre_usuario: string
   nombre: string
   apellido_paterno: string
-  apellido_maternno: string
+  apellido_materno: string
   contrasena: string
 }
