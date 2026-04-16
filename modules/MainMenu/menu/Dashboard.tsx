@@ -27,7 +27,7 @@ export default function Dashboard() {
     {
       titulo: "Reportes",
       icono: "📊",
-      ruta: "/Reports",
+      ruta: "/Reports/panelReports",
     },
     {
       titulo: "Documentos",

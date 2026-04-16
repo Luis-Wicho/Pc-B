@@ -3,6 +3,8 @@
 import React, { useEffect, useState  } from "react";
 import Image  from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 
 // Iconos para las tarjetas de reporte
@@ -19,6 +21,7 @@ interface ReportData {
 }
 
 export default function ReportsPage() {
+    const router = useRouter();
   const [data, setData] = useState<ReportData>({
     totalEstablecimientos: 0,
     totalUsuarios: 0,
@@ -97,12 +100,15 @@ export default function ReportsPage() {
           />
           </Link>
           
+          <Link href="/Reports/activities">
           <CardReport 
             titulo="Actividades" 
             valor={data.actividades} 
             color="orange" 
             icono={<ActivityIcon />} 
           />
+          </Link>
+          
 
         </div>
 
