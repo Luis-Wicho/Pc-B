@@ -1,3 +1,4 @@
+import { EstablishmentsRepositoryImpl } from "@/modules/Establishments/infrastructure/establishmentsRepositoryImpl";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
@@ -6,54 +7,35 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 🔹 PUT → actualizar tarifa
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET() {
   try {
-    const body = await request.json();
-    const { name, amount, status } = body;
+    const repository = new EstablishmentsRepositoryImpl();
 
-    const { error } = await supabase
+    // 🔹 Obtener establecimientos
+    const establecimientos = await repository.getAll();
+
+    // 🔹 Obtener tarifas
+    const { data: tarifas, error } = await supabase
       .from("rates")
-      .update({ name, amount, status })
-      .eq("id", params.id);
+      .select("*");
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    if (error) throw error;
 
-    return NextResponse.json({ message: "Tarifa actualizada correctamente" });
+    // 🔹 Unir datos (relación manual)
+    const resultado = establecimientos.map((est: any) => ({
+      ...est,
+      tarifas: tarifas.filter(
+        (t: any) => t.establishment_id === est.id
+      ),
+    }));
+
+    return NextResponse.json(resultado);
 
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
-      { error: "Error al actualizar tarifa" },
-      { status: 500 }
-    );
-  }
-}
-
-// 🔹 DELETE → eliminar tarifa
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const { error } = await supabase
-      .from("rates")
-      .delete()
-      .eq("id", params.id);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ message: "Tarifa eliminada correctamente" });
-
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Error al eliminar tarifa" },
+      { error: "Error al obtener datos :(" },
       { status: 500 }
     );
   }
