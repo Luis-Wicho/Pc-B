@@ -1,10 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image"; // Importamos Image para el logo corporativo
-import router from "next/router";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function RegistrarEstablecimientoView() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  
+  // --- ESTADOS ---
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [tamanio, setTamanio] = useState<any[]>([]);
+  const [tarifas, setTarifas] = useState<any[]>([]);
+  
+  // Estado para la ventana flotante (Modal de Notificación)
+  const [notificacion, setNotificacion] = useState<{
+    mostrar: boolean;
+    tipo: 'exito' | 'error';
+    mensaje: string;
+  }>({ mostrar: false, tipo: 'exito', mensaje: '' });
+
   const [form, setForm] = useState({
     no_expediente: "",
     nombre_establecimiento: "",
@@ -12,278 +27,320 @@ export default function RegistrarEstablecimientoView() {
     direccion: "",
     giro_comercial: "",
     estatus: "",
+    id_tamanio: undefined as number | undefined,
     observaciones: "",
+    id_tarifa: undefined as number | undefined,
   });
 
-  const handleChange = (e) => {
+  // --- CARGA DE DATOS ---
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        const [resTamanio, resTarifas] = await Promise.all([
+          fetch("/api/tamanio"),
+          fetch("/api/tarifas")
+        ]);
+        
+        const dataTamanio = await resTamanio.json();
+        const dataTarifas = await resTarifas.json();
+
+        setTamanio(Array.isArray(dataTamanio) ? dataTamanio : []);
+        setTarifas(Array.isArray(dataTarifas) ? dataTarifas : []);
+      } catch (error) {
+        console.error("Error cargando selects", error);
+      } finally {
+      setLoading(false);
+    }
+    };
+    cargarDatos();
+  }, []);
+
+  // --- MANEJADORES ---
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: name === "id_tamanio" || name === "id_tarifa"
+        ? value === "" ? undefined : Number(value)
+        : value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validación básica: asegura que los campos críticos no estén vacíos
-    if (!form.no_expediente.trim() || !form.nombre_establecimiento.trim() || !form.direccion.trim() || !form.estatus) {
-      alert("Por favor, ingrese No. de Expediente, Nombre del Establecimiento, Dirección Completa y Estatus.");
+    // Validaciones básicas
+    if (!form.no_expediente.trim() || !form.nombre_establecimiento.trim() || !form.id_tamanio || !form.id_tarifa) {
+      setNotificacion({
+        mostrar: true,
+        tipo: 'error',
+        mensaje: 'Por favor completa todos los campos marcados con asterisco (*).'
+      });
       return;
     }
 
-    await fetch("/api/establecimientos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    setIsSubmitting(true);
 
-    alert("Establecimiento registrado");
-    
-    // Opcional: limpiar el formulario tras envío exitoso
-    // setForm({
-    //   no_expediente: "",
-    //   nombre_establecimiento: "",
-    //   nombre_propietario: "",
-    //   direccion: "",
-    //   giro_comercial: "",
-    //   estatus: "",
-    //   observaciones: "",
-    // });
+    try {
+      const dataToSend = { ...form };
+
+      // Limpieza de campos vacíos
+      Object.keys(dataToSend).forEach((key) => {
+        const k = key as keyof typeof dataToSend;
+        if (dataToSend[k] === "" || dataToSend[k] === undefined || dataToSend[k] === null) {
+          delete dataToSend[k];
+        }
+      });
+
+      const res = await fetch("/api/Establishments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSend),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || "Error al procesar el registro");
+      }
+
+      // Éxito: Mostrar modal premium
+      setNotificacion({
+        mostrar: true,
+        tipo: 'exito',
+        mensaje: 'El establecimiento ha sido registrado correctamente en el sistema.'
+      });
+
+    } catch (error: any) {
+      setNotificacion({
+        mostrar: true,
+        tipo: 'error',
+        mensaje: error.message
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  if (loading) return (
+    <div className="flex justify-center items-center min-h-[400px]">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-700"></div>
+    </div>
+  );
+
   return (
-    // 1. Fondo general: bg-slate-50 (Gris muy claro #F5F5F5) para limpieza
     <div className="min-h-screen bg-slate-50 p-8 font-lato">
       
-      {/* 2. Cabecera Principal Integrando el Logo y Textos Corporativos */}
+      {/* Cabecera Principal */}
       <div className="max-w-7xl mx-auto mb-12 flex flex-col items-center border-b border-slate-100 pb-10">
-        
-        {/* Sección del Logo Corporativo */}
         <div className="p-2 mb-4">
           <Image
-            src="/img/Pcblogo.png" // Asegúrate de que esta ruta sea correcta
-            alt="Logo Protección Civil y Bomberos Izúcar"
-            width={120} // Ligeramente más pequeño para mejor balance
+            src="/img/Pcblogo.png"
+            alt="Logo Protección Civil"
+            width={120}
             height={120}
             priority
           />
         </div>
 
-        {/* Sección de Identidad de Marca: Estilizado con los colores corporativos */}
         <div className="text-center space-y-1">
-          {/* 'PROTECCIÓN CIVIL' en Teal Primario #1E838F */}
-          <p className="text-3xl font-bold text-teal-700 tracking-tight leading-tight">
-            PROTECCIÓN CIVIL
-          </p>
-          {/* 'Y BOMBEROS' en Naranja de Acento #E8702D */}
-          <p className="text-2xl font-semibold text-orange-600 leading-tight">
-            Y BOMBEROS
-          </p>
-          {/* Ubicación en Gris Oscuro #1D1D1B */}
-          <p className="text-lg font-normal text-slate-900 pt-1">
-            IZÚCAR DE MATAMOROS, PUE.
-          </p>
+          <p className="text-3xl font-bold text-teal-700 tracking-tight leading-tight">PROTECCIÓN CIVIL</p>
+          <p className="text-2xl font-semibold text-orange-600 leading-tight">Y BOMBEROS</p>
+          <p className="text-lg font-normal text-slate-900 pt-1">IZÚCAR DE MATAMOROS, PUE.</p>
         </div>
       </div>
 
-      {/* 3. Tarjeta del Formulario: Añadida sombra sutil, bordes redondeados y fondo blanco */}
-      <div className="max-w-4xl mx-auto bg-white p-12 rounded-3xl shadow-xl border border-slate-100">
-        
-        {/* Título de la Sección de Registro */}
+      {/* Tarjeta del Formulario */}
+      <div className="max-w-4xl mx-auto bg-white p-12 rounded-[2.5rem] shadow-xl border border-slate-100 relative overflow-hidden">
         <div className="mb-10 pb-6 border-b border-slate-100">
-          <h1 className="text-4xl font-extrabold text-slate-950 tracking-tight">
-            Registro de Nuevo Expediente</h1>
-          
+          <h1 className="text-4xl font-extrabold text-slate-950 tracking-tight">Registro de Nuevo Establecimiento</h1>
           <p className="text-slate-500 text-lg mt-1">Formulario de Alta para Protección Civil</p>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
-          {/* Campo No. de Expediente (Ocupa todo el ancho en mobile, mitad en desktop) */}
           <div className="flex flex-col space-y-2">
-            <label htmlFor="no_expediente" className="text-slate-700 font-medium ml-1 text-sm">
-              No. de Expediente *
-            </label>
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">No. de Expediente *</label>
             <input
-              //id="no_expediente"
               type="text"
-              name="noExpediente"
-              //required
-              //value={form.no_expediente}
+              name="no_expediente"
+              value={form.no_expediente}
               onChange={handleChange}
               placeholder="Ej: EXP-2026-001"
-              // Inputs: Estilizados con bordes sutiles y focus Teal
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 shadow-sm transition-all outline-none"
             />
           </div>
 
-          {/* Campo Nombre del Establecimiento */}
           <div className="flex flex-col space-y-2">
-            <label htmlFor="nombre_establecimiento" className="text-slate-700 font-medium ml-1 text-sm">
-              Nombre del Establecimiento *
-            </label>
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Nombre del Establecimiento *</label>
             <input
-              //id="nombre_establecimiento"
               type="text"
-              name="nombreEstablecimiento"
-             // required
-              //value={form.nombre_establecimiento}
+              name="nombre_establecimiento"
+              value={form.nombre_establecimiento}
               onChange={handleChange}
-              placeholder="Ej: Licencia Comercial Anual"
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
+              placeholder="Nombre comercial"
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 shadow-sm transition-all outline-none"
             />
           </div>
 
-          {/* Sección Propietario (3 columnas) */}
-          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-inner">
-            <div className="md:col-span-3 pb-2 border-b border-slate-200">
-              <span className="text-sm font-bold text-teal-700 uppercase tracking-widest">Datos del Propietario</span>
-            </div>
-            
-            <div className="flex flex-col space-y-1">
-              <label className="text-xs font-medium text-slate-500">Nombre(s)</label>
-              <input
-                type="text"
-                name="nombrePropietario"
-                onChange={handleChange}
-                placeholder="Tus nombres"
-                className="w-full p-2.5 border border-slate-200 rounded-lg text-slate-950 bg-white"
-              />
-            </div>
-            
-            <div className="flex flex-col space-y-1">
-              <label className="text-xs font-medium text-slate-500">Apellido Paterno</label>
-              <input
-                type="text"
-                name="apellidoPaterno"
-                onChange={handleChange}
-                placeholder="Tus apellidos"
-                className="w-full p-2.5 border border-slate-200 rounded-lg text-slate-950 bg-white"
-              />
-            </div>
-            
-            <div className="flex flex-col space-y-1">
-              <label className="text-xs font-medium text-slate-500">Apellido Materno</label>
-              <input
-                type="text"
-                name="apellidoMaterno"
-                onChange={handleChange}
-                placeholder="Tus apellidos"
-                className="w-full p-2.5 border border-slate-200 rounded-lg text-slate-950 bg-white"
-              />
-            </div>
+          <div className="md:col-span-2 grid grid-cols-1 gap-6 bg-slate-50 p-6 rounded-3xl border border-slate-100">
+            <span className="text-xs font-black text-teal-700 uppercase tracking-widest ml-1">Datos del Propietario</span>
+            <input
+              type="text"
+              name="nombre_propietario"
+              value={form.nombre_propietario}
+              onChange={handleChange}
+              placeholder="Nombre completo del titular"
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
+            />
           </div>
 
-          {/* Campo Dirección Completa */}
           <div className="md:col-span-2 flex flex-col space-y-2">
-            <label htmlFor="direccion" className="text-slate-700 font-medium ml-1 text-sm">
-              Dirección Completa *
-            </label>
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Dirección Completa *</label>
             <input
-              id="direccion"
               type="text"
               name="direccion"
-              required
               value={form.direccion}
               onChange={handleChange}
-              placeholder="Ej: Calle 16 de Septiembre s/n, Izúcar"
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
+              placeholder="Calle, número, colonia..."
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
             />
           </div>
 
-          {/* Estatus y Giro */}
           <div className="flex flex-col space-y-2">
-            <label htmlFor="estatus" className="text-slate-700 font-medium ml-1 text-sm">
-              Estatus *
-            </label>
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Estatus *</label>
             <select
-              id="estatus"
               name="estatus"
-              required
+              value={form.estatus}
               onChange={handleChange}
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg bg-white text-slate-950 shadow-sm focus:ring-2 focus:ring-teal-200 focus:border-teal-700 outline-none transition-all"
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
             >
               <option value="">Seleccionar...</option>
-              <option value="activo">Activo</option>
-              <option value="pendiente">Pendiente</option>
-              <option value="clausurado">Clausurado</option>
+              <option value="Activo">Activo</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Inactivo">Inactivo</option>
             </select>
           </div>
 
           <div className="flex flex-col space-y-2">
-            <label htmlFor="giroComercial" className="text-slate-700 font-medium ml-1 text-sm">
-              Giro Comercial
-            </label>
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Giro Comercial</label>
             <input
-              id="giroComercial"
               type="text"
-              name="giroComercial"
+              name="giro_comercial"
+              value={form.giro_comercial}
               onChange={handleChange}
-              placeholder="Ej: Restaurante, Farmacia..."
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
-            />
-          </div>
-
-          {/* Tamaño y Fecha */}
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="tamanoEstablecimiento" className="text-slate-700 font-medium ml-1 text-sm">
-              Tamaño del Establecimiento ($m^2$)
-            </label>
-            <input
-              id="tamanoEstablecimiento"
-              type="number"
-              name="tamanoEstablecimiento"
-              onChange={handleChange}
-              placeholder="Ej: 50"
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
+              placeholder="Ej: Restaurante"
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
             />
           </div>
 
           <div className="flex flex-col space-y-2">
-            <label htmlFor="fechaExpedicion" className="text-slate-700 font-medium ml-1 text-sm">
-              Fecha de Expedición
-            </label>
-            <input
-              id="fechaExpedicion"
-              type="date"
-              name="fechaExpedicion"
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Tamaño</label>
+            <select
+              name="id_tamanio"
+              value={form.id_tamanio}
               onChange={handleChange}
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
-            />
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
+            >
+              <option value="">Seleccionar...</option>
+              {tamanio.map((t) => (
+                <option key={t.id_tamanio} value={t.id_tamanio}>{t.tamanio}</option>
+              ))}
+            </select>
           </div>
 
-          {/* Observaciones (Ocupa todo el ancho) */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Tarifa Anual</label>
+            <select
+              name="id_tarifa"
+              value={form.id_tarifa}
+              onChange={handleChange}
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
+            >
+              <option value="">Seleccionar...</option>
+              {tarifas.map((t) => (
+                <option key={t.id_tarifa} value={t.id_tarifa}>{`$${t.monto_base}`}</option>
+              ))}
+            </select>
+          </div>
+
           <div className="md:col-span-2 flex flex-col space-y-2">
-            <label htmlFor="observaciones" className="text-slate-700 font-medium ml-1 text-sm">
-              Observaciones
-            </label>
+            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Observaciones</label>
             <textarea
-              id="observaciones"
               name="observaciones"
               value={form.observaciones}
               onChange={handleChange}
-              rows={4}
-              className="w-full px-4 py-3 text-lg border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 text-slate-950 shadow-sm placeholder:text-slate-400 transition-all"
-              placeholder="Notas adicionales..."
-            ></textarea>
+              rows={3}
+              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
+              placeholder="Notas adicionales relevantes..."
+            />
           </div>
 
-          {/* Botón Principal: Cambiado de bg-gray-300 a bg-teal-700 (#1E838F) */}
-          <div className="pt-6">
+          <div className="md:col-span-2 pt-6">
             <button
               type="submit"
-              className="w-full py-4 bg-teal-700 text-white font-bold rounded-xl hover:bg-teal-800 transition duration-300 shadow-md shadow-teal-700/20 active:scale-95 text-xl flex items-center justify-center gap-2"
-              onClick={() => router.push("/Establishments")}
+              disabled={isSubmitting}
+              className={`w-full py-5 text-white font-black rounded-2xl transition-all duration-300 shadow-lg active:scale-95 text-xl flex items-center justify-center gap-3 ${
+                isSubmitting ? "bg-slate-400 cursor-not-allowed" : "bg-teal-700 hover:bg-teal-800 shadow-teal-700/20"
+              }`}
             >
-              <span>🚪</span>
-              Guardar Establecimiento
+              {isSubmitting ? "PROCESANDO..." : "GUARDAR REGISTRO"}
             </button>
           </div>
-
         </form>
       </div>
+
+      {/* --- VENTANA FLOTANTE DE NOTIFICACIÓN (MODAL PREMIUM) --- */}
+      {notificacion.mostrar && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-md flex items-center justify-center z-[100] p-4 transition-all duration-300">
+          <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] w-full max-w-sm overflow-hidden animate-in zoom-in duration-300">
+            
+            {/* Cabecera con Gradiente */}
+            <div className={`p-10 text-white text-center ${
+              notificacion.tipo === 'exito' ? 'bg-gradient-to-br from-teal-700 to-teal-900' : 'bg-gradient-to-br from-orange-600 to-red-700'
+            }`}>
+              <div className="bg-white/20 w-20 h-20 rounded-[2rem] backdrop-blur-md mx-auto mb-4 flex items-center justify-center">
+                {notificacion.tipo === 'exito' ? (
+                  <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                  </svg>
+                ) : (
+                  <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                  </svg>
+                )}
+              </div>
+              <h2 className="text-3xl font-black tracking-tighter">
+                {notificacion.tipo === 'exito' ? '¡LISTO!' : '¡ERROR!'}
+              </h2>
+            </div>
+
+            {/* Mensaje y Botón */}
+            <div className="p-10 text-center space-y-8">
+              <p className="text-slate-600 font-bold text-lg leading-snug">
+                {notificacion.mensaje}
+              </p>
+
+              <button 
+                onClick={() => {
+                  if (notificacion.tipo === 'exito') {
+                    router.push("/Establishments");
+                  } else {
+                    setNotificacion({ ...notificacion, mostrar: false });
+                  }
+                }}
+                className={`w-full py-4 rounded-2xl font-black text-white shadow-xl transition-all active:scale-95 ${
+                  notificacion.tipo === 'exito' ? 'bg-teal-700 hover:bg-teal-800' : 'bg-orange-600 hover:bg-orange-700'
+                }`}
+              >
+                {notificacion.tipo === 'exito' ? 'CONTINUAR' : 'REINTENTAR'}
+              </button>
+            </div>
+            
+            <div className={`h-2 w-full ${notificacion.tipo === 'exito' ? 'bg-teal-700' : 'bg-orange-600'} opacity-30`}></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

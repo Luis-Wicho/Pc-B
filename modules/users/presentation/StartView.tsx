@@ -156,7 +156,7 @@ export default function StartView() {
 
             {/* Registrar: Enlace sutil al final */}
             <p className="text-center text-slate-600 pt-6">
-              ¿Eres un establecimiento nuevo?{' '}
+              ¿Eres un usuario nuevo?{' '}
               <span className="font-semibold text-teal-700 hover:text-teal-900 cursor-pointer">
                 Registrar
               </span>
