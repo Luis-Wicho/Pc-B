@@ -32,7 +32,7 @@ export default function Dashboard() {
     {
       titulo: "Documentos",
        icono: "🗂️",
-       ruta: "/documents",
+       ruta: "/Documents",
     },
     
     // Añadimos una opción extra para que el sidebar se vea completo
