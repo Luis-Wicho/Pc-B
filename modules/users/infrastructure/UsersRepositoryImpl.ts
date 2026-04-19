@@ -4,6 +4,9 @@ import { User } from "../domain/users.entity"
 import { UserRepository } from "../domain/users.repository"
 
 export class UsersRepositoryImpl implements UserRepository {
+  findById(id: number) {
+    throw new Error("Method not implemented.")
+  }
 
   async getAll(): Promise<User[]> {
     const supabase = await createClient(cookies())
