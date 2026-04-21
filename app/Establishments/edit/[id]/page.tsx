@@ -1,4 +1,4 @@
-import EditEstablishmentView from "@/modules/Establishments/presentation/views/editEstablishmentsView";
+import EditEstablishmentView from "@/modules/Establishments/presentation/views/EditEstablishmentsView";
 
 export default function Page() {
   return <EditEstablishmentView />;

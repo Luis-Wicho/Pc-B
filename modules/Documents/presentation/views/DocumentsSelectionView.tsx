@@ -4,9 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { Search, FileText, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+interface Establishment {
+  id_establecimiento: number;
+  nombre_establecimiento: string;
+  no_expediente: string; // Importante: usamos el nombre de tu BD
+}
+
 export const DocumentsSelectionView = () => {
   const [busqueda, setBusqueda] = useState("");
-  const [establecimientos, setEstablecimientos] = useState<any[]>([]);
+  const [establecimientos, setEstablecimientos] = useState<Establishment[]>([]);
   const router = useRouter();
 
   // Reutilizamos la lógica de obtención de datos que ya tienes
