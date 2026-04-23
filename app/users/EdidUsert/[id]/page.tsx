@@ -1,4 +1,4 @@
-import EditUserView from "@/modules/userS/presentation/EditUserView";
+import EditUserView from "@/modules/Users/presentation/EditUserView";
 
 export default function Page() {
   return <EditUserView />;

@@ -1,4 +1,4 @@
-import NewUsers from "@/modules/userS/presentation/newUser";
+import NewUsers from "@/modules/Users/presentation/newUser";
 
 export default function Page(){
     return <NewUsers/>
