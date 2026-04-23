@@ -11,7 +11,7 @@ export default function RegistrarEstablecimientoView() {
   // --- ESTADOS ---
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tamanio, setTamanio] = useState<any[]>([]);
-  const [tarifas, setTarifas] = useState<any[]>([]);
+  
   
   // Estado para la ventana flotante (Modal de Notificación)
   const [notificacion, setNotificacion] = useState<{
@@ -29,23 +29,23 @@ export default function RegistrarEstablecimientoView() {
     estatus: "",
     id_tamanio: undefined as number | undefined,
     observaciones: "",
-    id_tarifa: undefined as number | undefined,
+
   });
 
   // --- CARGA DE DATOS ---
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const [resTamanio, resTarifas] = await Promise.all([
+        const [resTamanio] = await Promise.all([
           fetch("/api/tamanio"),
-          fetch("/api/tarifas")
+          
         ]);
         
         const dataTamanio = await resTamanio.json();
-        const dataTarifas = await resTarifas.json();
+        
 
         setTamanio(Array.isArray(dataTamanio) ? dataTamanio : []);
-        setTarifas(Array.isArray(dataTarifas) ? dataTarifas : []);
+        
       } catch (error) {
         console.error("Error cargando selects", error);
       } finally {
@@ -70,7 +70,7 @@ export default function RegistrarEstablecimientoView() {
     e.preventDefault();
 
     // Validaciones básicas
-    if (!form.no_expediente.trim() || !form.nombre_establecimiento.trim() || !form.id_tamanio || !form.id_tarifa) {
+    if (!form.no_expediente.trim() || !form.nombre_establecimiento.trim() || !form.id_tamanio) {
       setNotificacion({
         mostrar: true,
         tipo: 'error',
@@ -249,20 +249,7 @@ export default function RegistrarEstablecimientoView() {
             </select>
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Tarifa Anual</label>
-            <select
-              name="id_tarifa"
-              value={form.id_tarifa}
-              onChange={handleChange}
-              className="w-full px-4 py-3.5 text-lg border border-slate-200 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-700 text-slate-950 outline-none transition-all"
-            >
-              <option value="">Seleccionar...</option>
-              {tarifas.map((t) => (
-                <option key={t.id_tarifa} value={t.id_tarifa}>{`$${t.monto_base}`}</option>
-              ))}
-            </select>
-          </div>
+          
 
           <div className="md:col-span-2 flex flex-col space-y-2">
             <label className="text-slate-700 font-bold ml-1 text-sm uppercase tracking-wider">Observaciones</label>

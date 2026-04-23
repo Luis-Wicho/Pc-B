@@ -139,7 +139,6 @@ export default function ListoEstablishmentsView() {
                 <th className="p-3 text-left">Estatus</th>
                 <th className="p-3 text-left">Giro</th>
                 <th className="p-3 text-left">Tamaño</th>
-                <th className="p-3 text-left">Tarifa</th>
                 <th className="p-3 text-left text-center">Acciones</th>
               </tr>
             </thead>
@@ -175,7 +174,7 @@ export default function ListoEstablishmentsView() {
                   </td>
                   <td className="p-3 text-slate-600">{e.giro_comercial}</td>
                   <td className="p-3 text-slate-600">{e.nombre_tamanio}</td>
-                  <td className="p-3 text-slate-600 font-bold">${e.monto_tarifa?.toFixed(2) || "0.00"}</td>
+                  
                   <td className="p-3">
                     <div className="flex items-center justify-center gap-2">
                       <button 
