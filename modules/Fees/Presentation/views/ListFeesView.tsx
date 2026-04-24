@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Fee } from "../../domain/fee.entity";
 import { FeesRepositoryImpl } from "../../infrastructure/FeesRepositoryImpl";
-import { GetFeesUseCase } from "../../Application/GetFees.usecase";
-import { DeleteFeeUseCase } from "../../Application/DeleteFee.usecase";
+import { GetFeesUseCase } from "../../Application/getFees.usecase";
+import { DeleteFeeUseCase } from "../../Application/deleteFee.usecase";
 
 export default function ListFeesView() {
   const [fees, setFees] = useState<Fee[]>([]);

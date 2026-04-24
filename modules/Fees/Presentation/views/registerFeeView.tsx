@@ -4,8 +4,8 @@ import React, { useState } from "react";
 // Si usas Next.js router para regresar a la lista
 import { useRouter } from "next/navigation"; 
 import { FeesRepositoryImpl } from "../../infrastructure/FeesRepositoryImpl";
-import { CreateFeeUseCase } from "../../Application/CreateFee.usecase";
-import { GetFeesUseCase } from "../../Application/GetFees.usecase";
+import { CreateFeeUseCase } from "../../Application/createFee.usecase";
+import { GetFeesUseCase } from "../../Application/getFees.usecase";
 
 export default function RegisterFeeView() {
   const router = useRouter();

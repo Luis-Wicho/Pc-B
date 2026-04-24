@@ -4,8 +4,16 @@ import { User } from "../domain/users.entity"
 import { UserRepository } from "../domain/users.repository"
 
 export class UsersRepositoryImpl implements UserRepository {
-  findById(id: number) {
-    throw new Error("Method not implemented.")
+  async getById(id: number): Promise<User | null> {
+    const supabase = await createClient(cookies())
+    const { data, error } = await supabase
+      .from("usuarios")
+      .select("*")
+      .eq("id_usuario", id)
+      .single()
+
+    if (error) return null
+    return data
   }
 
   async getAll(): Promise<User[]> {
@@ -20,19 +28,7 @@ export class UsersRepositoryImpl implements UserRepository {
     return data ?? []
   }
 
-  async getById(id: number): Promise<User | null> {
-    const supabase = await createClient(cookies())
-
-    const { data, error } = await supabase
-      .from("usuarios")
-      .select("*")
-      .eq("id_usuario", id)
-      .single()
-
-    if (error) return null
-
-    return data
-  }
+  
 
   async create(user: Omit<User, "id_usuario">): Promise<User> {
     const supabase = await createClient(cookies())
