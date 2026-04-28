@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Swal from "sweetalert2";
 
-export default function EditEstablishmentView() {
+export default function EditEstablishmentsView() {
   const { id } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -29,10 +29,10 @@ const [tamanios, setTamanios] = useState<any[]>([]);
   const cargarCatalogos = async () => {
     try {
       // Cargamos todo en paralelo para mayor velocidad
-      const [resEst, resTam, resTar] = await Promise.all([
+      const [resEst, resTam] = await Promise.all([
         fetch(`/api/Establishments/${id}`),
         fetch(`/api/tamanio`), // Ajusta estas rutas a tus APIs reales
-        fetch(`/api/tarifas`)
+        
       ]);
 
       if (resEst.ok) {
@@ -74,10 +74,18 @@ const [tamanios, setTamanios] = useState<any[]>([]);
 
     if (result.isConfirmed) {
       try {
+      // Creamos una copia de los datos para no afectar el estado visual
+      // pero convirtiendo los IDs a números
+      const dataParaEnviar = {
+        ...formData,
+        id_tamanio: formData.id_tamanio === "" ? null : parseInt(formData.id_tamanio),
+        // estatus: formData.estatus === "" ? null : parseInt(formData.estatus), // Haz lo mismo si estatus es integer
+      };
+      
         const response = await fetch(`/api/Establishments/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataParaEnviar),
         });
 
         if (response.ok) {
@@ -90,9 +98,12 @@ const [tamanios, setTamanios] = useState<any[]>([]);
           });
           router.push("/Establishments");
         } else {
+          const errorData = await response.json();
+          console.error("Error del servidor:", errorData);
           throw new Error("Error en la respuesta");
         }
       } catch (error) {
+        console.error("Error al actualizar:", error);
         Swal.fire("Error", "No se pudo actualizar el registro", "error");
       }
     }
