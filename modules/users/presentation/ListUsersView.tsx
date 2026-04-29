@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
+import Swal from "sweetalert2"
+import { ArrowLeft } from "lucide-react"
 
 // Iconos
 const PlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>;
@@ -60,23 +62,63 @@ export default function ListUsersView() {
   }, [usuarios, busqueda])
 
   const eliminarUsuario = async (id: number) => {
-    const confirmar = window.confirm("¿Deseas eliminar este usuario?")
-    if (!confirmar) return
+  // 1. Alerta de confirmación bonita
+  const resultado = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: "Esta acción no se puede deshacer",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33', // Rojo para eliminar
+    cancelButtonColor: '#005954', // El verde de tu sistema para cancelar
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true // Pone el botón de cancelar a la izquierda
+  });
 
-    try {
-      const res = await fetch(`/api/users/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        setMensaje("Usuario eliminado")
-        obtenerUsuarios()
-      }
-    } catch {
-      setMensaje("Error al eliminar")
+  // Si el usuario cancela, no hacemos nada
+  if (!resultado.isConfirmed) return;
+
+  try {
+    const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+    
+    if (res.ok) {
+      // 2. Alerta de éxito (Toast) que no requiere clic
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Usuario eliminado correctamente',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
+      
+      obtenerUsuarios();
+    } else {
+      throw new Error();
     }
+  } catch (error) {
+    // 3. Alerta de error
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo eliminar al usuario en este momento',
+      confirmButtonColor: '#005954'
+    });
   }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 p-8 font-lato">
       <div className="mx-auto max-w-6xl">
+        <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
 
         {/* Header */}
         <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -85,9 +127,7 @@ export default function ListUsersView() {
             <p className="text-slate-500 text-lg mt-1">Gestión de personal</p>
           </div>
 
-          <Link href="/users/New" className="flex items-center gap-2 bg-teal-700 hover:bg-teal-800 px-8 py-4 text-white rounded-2xl font-bold">
-            <PlusIcon /> Nuevo Usuario
-          </Link>
+          
         </div>
 
         {/* Buscador */}

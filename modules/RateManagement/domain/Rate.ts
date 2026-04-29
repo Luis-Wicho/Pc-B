@@ -1,6 +1,4 @@
 export interface Rate {
-  id: number;
-  name: string;
-  amount: number;
-  status: "ACTIVE" | "INACTIVE";
+  id_tarifa: number;
+  monto_base: number;
 }

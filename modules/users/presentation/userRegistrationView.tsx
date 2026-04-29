@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2';
 
 const UserAddIcon = () => (
   <svg
@@ -36,7 +38,15 @@ export default function UserRegistrationView() {
 
     // ✅ Validación
     if (formData.password !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      Swal.fire({
+            icon: 'error',
+            title: 'Las contraseñas no coinciden',
+            text: "Por favor, verifica que ambas contraseñas sean iguales.", // Esto mostrará el mensaje que pusiste en el NextResponse.json
+            confirmButtonColor: '#005954',
+            timer: 3000,
+            timerProgressBar: true
+            });
+      //alert("Las contraseñas no coinciden");
       return;
     }
 
@@ -67,8 +77,28 @@ export default function UserRegistrationView() {
         return;
       }
 
-      alert("Usuario registrado correctamente");
-      router.push("/users/start");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end', // Puedes usar 'top', 'center', etc.
+        showConfirmButton: false,
+        timer: 2000, // Se cierra en 2 segundos
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      });
+      
+      Toast.fire({
+        icon: 'success',
+        title: '¡Usuario registrado con éxito!'
+      });
+      
+      // Rediriges después de que se lanza la alerta o con un pequeño delay
+      setTimeout(() => {
+          router.push("/start");
+      }, 1500);
+      //router.push("/users/start");
 
     } catch (error) {
       console.error(error);
@@ -77,81 +107,139 @@ export default function UserRegistrationView() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-50 p-6 font-lato">
-      <div className="bg-white p-12 rounded-3xl shadow-xl w-full max-w-3xl mx-4 border border-slate-100">
-        
-        <div className="text-center mb-12">
-          <UserAddIcon />
-          <h1 className="text-4xl font-extrabold text-slate-950 tracking-tight">
-            Crear Cuenta
-          </h1>
-          <p className="text-slate-600 mt-3 text-lg">
-            Ingresa tus datos para registrar tu establecimiento
-          </p>
-        </div>
+    <div 
+  className="flex items-center justify-center min-h-screen bg-slate-50 p-6 font-lato relative overflow-hidden"
+  style={{
+    backgroundImage: 'url(/img/pleca.png)', 
+    backgroundRepeat: 'repeat-x',
+    backgroundSize: 'auto 40px', // Tamaño de la pleca igual que en los anteriores
+    backgroundPosition: 'top center',
+  }}
+>
+  
+  {/* Tarjeta del Formulario */}
+  <div className="bg-white p-12 rounded-3xl shadow-xl w-full max-w-3xl mx-4 border border-slate-100 relative z-10">
+    
+    {/* Cabecera con Identidad Corporativa (Logo y Textos) */}
+    <div className="text-center mb-10 flex flex-col items-center">
+      <div className="p-2 mb-4">
+        <Image
+          src="/img/Pcblogo.png"
+          alt="Logo Protección Civil"
+          width={150}
+          height={150}
+          priority
+        />
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-1">
+        <p className="text-2xl font-bold text-teal-700 tracking-tight leading-tight uppercase">
+          Protección Civil
+        </p>
+        <p className="text-xl font-semibold text-orange-600 leading-tight uppercase">
+          y Bomberos
+        </p>
+        <p className="text-sm font-normal text-slate-900">
+          IZÚCAR DE MATAMOROS, PUE.
+        </p>
+      </div>
+      
+      {/* Separador visual sutil */}
+      <div className="w-full border-b border-slate-100 mt-8 mb-6"></div>
 
-          <input
-            type="text"
-            name="username"
-            required
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="Usuario o correo"
-            className="w-full px-4 py-3 border rounded-lg"
-          />
+      <h1 className="text-3xl font-extrabold text-slate-950 tracking-tight">
+        Crear Cuenta
+      </h1>
+      <p className="text-slate-600 mt-2 text-base">
+        Ingresa tus datos para registrar tu cuenta
+      </p>
+    </div>
 
+    <form onSubmit={handleSubmit} className="space-y-5">
+      
+      {/* Input: Usuario */}
+      <div className="flex flex-col space-y-1">
+        <label className="text-slate-700 font-medium text-sm ml-1">Usuario</label>
+        <input
+          type="text"
+          name="username"
+          required
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Ej: usuario123"
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 outline-none transition"
+        />
+      </div>
+
+      {/* Grid: Nombres y Apellidos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col space-y-1">
+          <label className="text-slate-700 font-medium text-sm ml-1">Nombres</label>
           <input
             type="text"
             name="nombres"
             required
             value={formData.nombres}
             onChange={handleChange}
-            placeholder="Nombres"
-            className="w-full px-4 py-3 border rounded-lg"
+            className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 outline-none"
           />
-
+        </div>
+        <div className="flex flex-col space-y-1">
+          <label className="text-slate-700 font-medium text-sm ml-1">Apellidos</label>
           <input
             type="text"
             name="apellidos"
             required
             value={formData.apellidos}
             onChange={handleChange}
-            placeholder="Apellidos"
-            className="w-full px-4 py-3 border rounded-lg"
+            className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 outline-none"
           />
+        </div>
+      </div>
 
+      {/* Grid: Contraseñas */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col space-y-1">
+          <label className="text-slate-700 font-medium text-sm ml-1">Contraseña</label>
           <input
             type="password"
             name="password"
             required
             value={formData.password}
             onChange={handleChange}
-            placeholder="Contraseña"
-            className="w-full px-4 py-3 border rounded-lg"
+            placeholder="••••••••"
+            className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 outline-none"
           />
-
+        </div>
+        <div className="flex flex-col space-y-1">
+          <label className="text-slate-700 font-medium text-sm ml-1">Confirmar</label>
           <input
             type="password"
             name="confirmPassword"
             required
             value={formData.confirmPassword}
             onChange={handleChange}
-            placeholder="Confirmar contraseña"
-            className="w-full px-4 py-3 border rounded-lg"
+            placeholder="••••••••"
+            className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-700 outline-none"
           />
-
-          <button className="w-full py-3 bg-teal-700 text-white rounded-xl">
-            Registrar
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <Link href="/users/start">Inicia sesión</Link>
         </div>
-
       </div>
+
+      <button className="w-full py-4 bg-teal-700 text-white rounded-xl font-bold text-lg hover:bg-teal-800 transition duration-300 shadow-lg shadow-teal-700/20 active:scale-[0.98] mt-4">
+        Registrar
+      </button>
+    </form>
+
+    <div className="mt-8 text-center border-t border-slate-50 pt-6">
+      <p className="text-slate-600">
+        ¿Ya tienes cuenta?{' '}
+        <Link href="/start" className="text-orange-600 font-bold hover:text-orange-700 transition">
+          Inicia sesión aquí
+        </Link>
+      </p>
     </div>
+
+  </div>
+</div>
   );
 }

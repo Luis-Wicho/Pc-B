@@ -4,6 +4,7 @@ import React, { useEffect, useState  } from "react";
 import Image  from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 
 
@@ -53,6 +54,14 @@ export default function ReportsPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-8 font-lato">
       <div className="max-w-7xl mx-auto">
+        <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
         
         {/* Cabecera de Identidad */}
         <header className="flex flex-col items-center mb-12 text-center">

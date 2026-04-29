@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Swal from "sweetalert2";
+import { ArrowLeft } from 'lucide-react';
 
 export default function EditUserView() {
   const { id } = useParams();
@@ -89,6 +90,14 @@ export default function EditUserView() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
 
       {/* Cabecera con logo (igual que establecimientos) */}
       <div className="max-w-7xl mx-auto mb-12 flex flex-col items-center border-b border-slate-100 pb-10">

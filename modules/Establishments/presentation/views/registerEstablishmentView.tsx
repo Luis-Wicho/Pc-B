@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from 'lucide-react';
 
 export default function RegistrarEstablecimientoView() {
   const router = useRouter();
@@ -130,6 +131,14 @@ export default function RegistrarEstablecimientoView() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-8 font-lato">
+      <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
       
       {/* Cabecera Principal */}
       <div className="max-w-7xl mx-auto mb-12 flex flex-col items-center border-b border-slate-100 pb-10">

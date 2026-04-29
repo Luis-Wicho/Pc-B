@@ -5,6 +5,7 @@ import { ActivityRepositoryImpl } from "../infrastructure/activity.repository.im
 import { CreateActivity } from "../application/createActivity";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 const repo = new ActivityRepositoryImpl();
 
@@ -52,7 +53,14 @@ export default function CronogramaPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
-
+      <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
       {/* 🔥 CABECERA */}
       <div className="max-w-7xl mx-auto mb-12 border-b border-slate-100 pb-10 flex flex-col items-center">
         

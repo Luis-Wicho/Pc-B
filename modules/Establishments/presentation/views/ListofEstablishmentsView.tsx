@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, ArrowLeft } from "lucide-react";
 
 export default function ListoEstablishmentsView() {
   const router = useRouter();
@@ -103,6 +103,14 @@ export default function ListoEstablishmentsView() {
   return (
     <div className="min-h-screen bg-slate-50 p-6 font-lato">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-lg border border-slate-100 p-8">
+        <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
         
         {/* HEADER */}
         <div className="flex flex-col items-center mb-8">

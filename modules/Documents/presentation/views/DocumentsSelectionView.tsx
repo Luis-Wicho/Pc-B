@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search, FileText, ArrowRight } from 'lucide-react';
+import { Search, FileText, ArrowRight, ArrowLeft} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface Establishment {
@@ -32,9 +32,17 @@ export const DocumentsSelectionView = () => {
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
+      <div className="no-print flex justify-start mb-4">
+                    <button 
+                        onClick={() => router.back()}
+                        className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-teal-700 rounded-2xl transition-all border border-slate-200"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                </div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-800">Generación de Documentos</h1>
-        <p className="text-slate-500">Seleccione un establecimiento para emitir una constancia u orden de pago.</p>
+        <p className="text-slate-500">Seleccione un establecimiento para emitir una orden de pago.</p>
       </div>
 
       {/* Buscador Estilizado */}

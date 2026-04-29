@@ -29,7 +29,7 @@ export class EstablishmentsRepositoryImpl implements EstablishmentsRepository {
   }
 
   async findById(id: number): Promise<Establishment | null> {
-    const supabase = await createClient(); // Cambiado a await directo
+    const supabase = await createClient();
 
     const { data, error } = await supabase
       .from("establecimientos")
